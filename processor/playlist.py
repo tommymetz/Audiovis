@@ -3,7 +3,7 @@
 # ////////////////////////////////////////////////////////////
 import os
 location = '/Users/tometz/Documents/Audio/TomWav/_audiovis/public/content/'
-playlistname = 'Horizon'
+playlistname = 'Glissline - Horizon EP'
 playlist = []
 
 

@@ -25,7 +25,7 @@ from vector_quantize import vector_quantize
 #from worker_vector_quantize import worker_vector_quantize
 
 # get all files with .wav extention
-thename = 'Horizon'
+thename = 'SlowlyForget'
 TheFolder = '/Users/tometz/Documents/Audio/TomWav/_audiovis/public/content/' + thename + '/'
 masterfile = thename + '.wav'
 masterfilestring = masterfile

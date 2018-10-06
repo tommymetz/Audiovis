@@ -220,7 +220,10 @@ class Spectrum {
     //this.spectrummirror.geometry.attributes.position.needsUpdate = true;
   }
 
-
+  updateColor(color){
+    this.spectrum.material.color.set(color);
+    this.spectrummirror.material.color.set(color);
+  }
 
 
 

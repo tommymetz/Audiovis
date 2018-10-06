@@ -24,20 +24,24 @@
 
       //Backend connection
       this.socket = io.connect('http://localhost:3000');
-      this.export = false;
+      this.export = false; //Not really working
+      this.stop_on_next = false;
+      this.hide_controls = false;
 
       //Scene variables
       this.container = document.getElementById('container');
+      this.loadingdiv = document.getElementById('loading');
       this.scene = new THREE.Scene();
       this.renderer = new THREE.WebGLRenderer({ antialias: true });
-      this.camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 10000);
+      this.camera = new THREE.PerspectiveCamera(8, window.innerWidth / window.innerHeight, 0.1, 10000);
+      this.cameralookat = new THREE.Vector3(0, 1.2, 0);
       this.renderer.shadowMap.enabled = true;
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.container.appendChild(this.renderer.domElement);
       this.audiolistener = new THREE.AudioListener();
       this.camera.add(this.audiolistener);
 
-      //Scene params
+      //Variables
       this.fps = 24;
       this.animationstart = 0;
       this.now;
@@ -45,6 +49,10 @@
       this.interval = 1000/this.fps;
       this.delta;
       this.frame = 0;
+      this.currentsong = 0;
+
+      this.gui = new SceneGui(this);
+      if(this.hide_controls) this.gui.updateVisibility(false);
 
       //Stats
       this.stats = new Stats();
@@ -52,12 +60,12 @@
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.bottom = '0px';
       this.stats.domElement.style.zIndex = 100;
-      this.container.appendChild( this.stats.domElement );
+      if(!this.hide_controls) this.container.appendChild( this.stats.domElement );
 
       //Controls
       document.getElementById('game-stop').addEventListener('click', e => {
         e.preventDefault();
-        mythis.stop();
+        mythis.stopplay();
       });
 
       //Initialize
@@ -73,10 +81,9 @@
 
       // CONTROLS
       this.orbitcontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-      this.cameralookat = new THREE.Vector3(0, 1.5, 0);
 
       //Camera
-      this.camera.position.set(-10, 5, 10); //-15, 10, 20 | 0, 3, 20
+      this.camera.position.set(0, 3, 26); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
       this.camera.lookAt(this.cameralookat);
       window.addEventListener('resize', onWindowResize, false);
       function onWindowResize(){
@@ -123,37 +130,83 @@
       this.loadJSON('content/_playlist.json', response => {
         mythis.playlist = JSON.parse(response);
         console.log('playlist', mythis.playlist);
-        //Scene view
-        //mythis.gui = new SongGui(mythis);
 
         //Songs
         mythis.songs = [];
-        const location = `content/${mythis.playlist.songs[6]}/`;
-        mythis.songs[0] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps); //Details.wav, AudioTestFile.wav
-        mythis.songs[0].onLoaded = () => {
-          console.log(mythis);
+        let location = '';
 
-          //Gui
-          /*for(var i=0; i<this.stems.length; i++){
-            var folder = mythis.gui.gui.addFolder(this.stems[i].name);
-            folder.open();
-            mythis.gui.ui['displayOutline' + i] = false;
-            folder.add(mythis.gui.ui, 'displayOutline' + i);
-          }*/
+        //Foreach Song, load hidden
+        let songcount = mythis.playlist.songs.length;
+        //let songcount = 2;
+        for(let i=0; i<songcount; i++){
+          location = 'content/'+mythis.playlist.songs[i]+'/';
+          mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
+          mythis.songs[i].onLoaded = () => {
+            console.log(mythis.songs[i]);
 
-          //Start
-          mythis.initAnimate();
-          mythis.songs[0].play(0);
-
+            //Detect when all loaded
+            let loaded = true;
+            for(let j=0; j<songcount; j++){
+              if(!mythis.songs[j].loaded){
+                loaded = false;
+              }
+            }
+            if(loaded){
+              mythis.preloaded();
+            }
+          };
         }
-
       });
 
     }
 
-    stop() {
-      this.songs[0].audiotrack.stop();
-      this.paused = true;
+    preloaded(){
+      var mythis = this;
+      this.loadingdiv.style.visibility='hidden';
+      setTimeout(function(){
+        console.log('preloaded');
+        mythis.gui.init();
+        mythis.initAnimate();
+        mythis.play(mythis.currentsong);
+      }, 1000);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+    //PLAYBACK////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
+    play(which){
+      if(which) this.currentsong = which;
+      this.songs[this.currentsong].play(0);
+    }
+
+    stopplay() {
+      var mythis = this;
+      if(this.paused){
+        this.songs[this.currentsong].play();
+        this.paused = false;
+        requestAnimationFrame(() => { mythis.animate(); });
+      }else{
+        this.songs[this.currentsong].stop();
+        this.paused = true;
+      }
+    }
+
+    fastforward(){
+      this.songs[this.currentsong].fastforward();
+    }
+
+    nextsong(){
+      if(this.stop_on_next){
+        this.stopplay();
+      }else{
+        var mythis = this;
+        this.songs[this.currentsong].stop();
+        setTimeout(function(){
+          mythis.currentsong++;
+          if(mythis.currentsong == mythis.playlist.songs.length) mythis.currentsong = 0;
+          mythis.play();
+        }, 0);
+      }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,16 +219,13 @@
     initAnimate() {
       const mythis = this;
       this.paused = false;
+      this.frame = 0;
+      this.animationstart = Date.now();
 
-      //this.songs[0].audiotrack.play();
-      mythis.animationstart = Date.now();
-
-      setTimeout(() => {
-        mythis.renderer.render(mythis.scene, mythis.camera);
-        requestAnimationFrame(() => {
-          mythis.animate();
-        });
-      }, 10);
+      this.renderer.render(this.scene, this.camera);
+      requestAnimationFrame(() => {
+        mythis.animate();
+      });
     }
 
     animate() {
@@ -197,12 +247,12 @@
           this.socket.emit('render-frame', {frame: mythis.frame, file: document.querySelector('canvas').toDataURL()});
         }
         this.stats.update();
-        this.frame = Math.round((this.now - mythis.animationstart) / 41.666666666); //1000ms / 24fps = 41.666666666
+        this.frame = Math.round((this.now - this.animationstart) / 41.666666666); //1000ms / 24fps = 41.666666666
       }
     }
 
     updateScene() {
-      this.songs[0].updateAnimation(this.frame);
+      this.songs[this.currentsong].updateAnimation();
       this.camera.lookAt(this.cameralookat);
     }
 

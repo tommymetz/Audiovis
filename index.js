@@ -16,8 +16,13 @@ app.get('/', function (req, res) {
 
 app.post('/config/save', function (req, res) {
   //_config.json
-  console.log(req.body);
-  res.json(req.body);
+  //console.log(req.body);
+
+  var json = JSON.stringify(req.body);
+  var fs = require('fs');
+  fs.writeFile(__dirname + '/public/' + req.body.location + '_config.json', json, 'utf8', (error) => {
+    res.json(req.body);
+  });
 });
 
 io.sockets.on('connection', function (socket) {
@@ -25,9 +30,20 @@ io.sockets.on('connection', function (socket) {
     data.file = data.file.split(',')[1]; // Get rid of the data:image/png;base64 at the beginning of the file data
     var buffer = new Buffer(data.file, 'base64');
     fs.writeFile(__dirname + '/public/tmp/frame-' + data.frame + '.png', buffer.toString('binary'), 'binary', (error) => {
-      console.log('error');
+      //console.log('error');
     });
   });
-});
+});/**/
 
 //ffmpeg -r 60 -i /tmp/frame-%04d.png -vcodec libx264 -vpre lossless_slow -threads 0 output.mp4
+
+//Max4Live Connection - song triggering, fx connection
+/*var osc = require('node-osc');
+var oscServer = new osc.Server(9001, '0.0.0.0');
+oscServer.on("message", function (msg, rinfo) {
+  console.log("OSC:", msg);
+});
+var client = new osc.Client('127.0.0.1', 9000);
+client.send('/oscAddress', 'message from node', function () {
+  //client.kill();
+});*/

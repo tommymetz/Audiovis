@@ -25,7 +25,7 @@ class Helper {
     const geometry = new THREE.PlaneGeometry(1,0.5);
     const material = new THREE.MeshBasicMaterial({map:texture, transparent:true, side:THREE.DoubleSide});
     const mesh = new THREE.Mesh( geometry, material );
-    mesh.position.set(-0.5,1,0.01);
+    mesh.position.set(-1.5,1,0.01);
     this.stem.rootobject.add(mesh);
 
   }

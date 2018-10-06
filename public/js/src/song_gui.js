@@ -3,45 +3,59 @@ class SongGui {
   constructor(parent){
     const mythis = this;
     this.parent = parent;
+    this.visible = false;
 
     //State
     this.state = {
+      location: parent.location,
       order:[],
-      colorset:'',
+      colorset:'colorsWarmCold',
+      colors:[]
     };
 
     //Gui Container
     this.container = document.createElement('div');
     this.parent.parent.container.appendChild(this.container);
-    this.container.setAttribute('class', 'song-gui-container');
+    this.container.setAttribute('class', 'song-gui gui-container hidden');
 
       //Menu Bar
       this.menu = document.createElement('div');
       this.container.appendChild(this.menu);
-      this.menu.setAttribute('class', 'song-gui-menu');
-
-        //Changed
+      this.menu.setAttribute('class', 'gui-menu');
 
         //Song Title
+        this.title = document.createElement('div');
+        this.menu.appendChild(this.title);
+        this.title.setAttribute('class', 'gui-item gui-item_title');
+
+        //Changed
+        this.status_changed = document.createElement('div');
+        this.menu.appendChild(this.status_changed);
+        this.status_changed.setAttribute('class', 'gui-item gui-item_changed');
+
+        //Loading
+        this.status = document.createElement('div');
+        this.menu.appendChild(this.status);
+        this.status.setAttribute('class', 'gui-item gui-item_status');
 
         //Stop
-        this.button_stop = document.createElement('a');
-        this.menu.appendChild(this.button_stop);
-        this.button_stop.setAttribute('class', 'song-gui-item');
-        this.button_stop.setAttribute('href', '#');
-        this.button_stop.innerHTML = 'stop';
+        //this.button_stop = document.createElement('a');
+        //this.menu.appendChild(this.button_stop);
+        //this.button_stop.setAttribute('class', 'gui-item');
+        //this.button_stop.setAttribute('href', '#');
+        //this.button_stop.innerHTML = 'stop';
 
         //Load
         this.button_load = document.createElement('a');
         this.menu.appendChild(this.button_load);
-        this.button_load.setAttribute('class', 'song-gui-item');
+        this.button_load.setAttribute('class', 'gui-item');
         this.button_load.setAttribute('href', '#');
         this.button_load.innerHTML = 'load';
 
         //Save
         this.button_save = document.createElement('a');
         this.menu.appendChild(this.button_save);
-        this.button_save.setAttribute('class', 'song-gui-item');
+        this.button_save.setAttribute('class', 'gui-item');
         this.button_save.setAttribute('href', '#');
         this.button_save.innerHTML = 'save';
 
@@ -50,20 +64,19 @@ class SongGui {
       this.stems = [];
       this.stems_list = document.createElement('ul');
       this.container.appendChild(this.stems_list);
-      this.stems_list.setAttribute('class', 'song-gui-list');
-
-        //this.tracks[0] = document.createElement('li');
-        //this.tracks_list.appendChild(this.tracks[0]);
-        //this.tracks[0].innerHTML = 'itemm';
-
+      this.stems_list.setAttribute('class', 'gui-list');
   }
 
   init(){
     const mythis = this;
-    this.button_stop.addEventListener('click', e => {
-      e.preventDefault();
-      mythis.parent.parent.stop();
-    });
+
+    this.title.innerHTML = this.parent.mp3file;
+
+    //Menu Buttons
+    //this.button_stop.addEventListener('click', e => {
+    //  e.preventDefault();
+    //  mythis.parent.parent.stop();
+    //});
     this.button_load.addEventListener('click', e => {
       e.preventDefault();
       mythis.loadState();
@@ -73,14 +86,53 @@ class SongGui {
       mythis.saveState();
     });
 
+    //Parameters
+    this.state.colors = this.parent.colors;
+    this.state.order = this.parent.order;
+
     //Tracks
+    var stemlist = new Array(this.parent.stems.length);
     this.parent.stems.forEach(function(element, index){
       const order = element.order;
       mythis.stems[index] = document.createElement('li');
-      mythis.stems[index].setAttribute('data-index', order);
-      if(!mythis.parent.stems[order].active) mythis.stems[index].className += 'inactive';
-      mythis.stems_list.appendChild(mythis.stems[index]);
-      mythis.stems[index].innerHTML = mythis.parent.stems[order].name;
+      mythis.stems[index].setAttribute('data-index', index);
+
+        //Name
+        const name = document.createElement('div');
+        name.setAttribute('class', 'name');
+        name.innerHTML = mythis.parent.stems[index].name;
+        mythis.stems[index].appendChild(name);
+
+        //Color
+        const color = document.createElement('input');
+        color.setAttribute('type', 'color');
+        color.setAttribute('value', mythis.state.colors[index]);
+        if(!mythis.parent.stems[index].active) color.setAttribute('disabled', true);
+        mythis.stems[index].appendChild(color);
+        color.addEventListener('input', function(e){
+          mythis.status_changed.innerHTML = '*';
+          const elementindex = e.target.parentElement.getAttribute('data-index');
+          mythis.state.colors[elementindex] = e.target.value;
+          mythis.parent.updateStemColor(elementindex, e.target.value);
+        }, false);
+
+        //Solo Checkbox
+        const solo = document.createElement('input');
+        solo.setAttribute('type', 'checkbox');
+        if(!mythis.parent.stems[index].active) solo.setAttribute('disabled', true);
+        mythis.stems[index].appendChild(solo);
+        solo.addEventListener('change', function(e){
+          const elementindex = e.target.parentElement.getAttribute('data-index');
+          mythis.parent.updateSoloing(elementindex, this.checked);
+          mythis.updateSoloing(elementindex, this.checked);
+        });
+
+
+      if(!mythis.parent.stems[index].active) mythis.stems[index].className += 'inactive';
+      stemlist[element.order] = mythis.stems[index];
+    });
+    stemlist.forEach(function(element, index){
+      mythis.stems_list.appendChild(element);
     });
 
     //Sortable
@@ -92,8 +144,30 @@ class SongGui {
         }
         mythis.state.order = neworder;
         mythis.parent.updateStemOrder(neworder);
+        mythis.status_changed.innerHTML = '*';
     	},
     });
+  }
+
+  updateVisibility(visible){
+    this.visible = visible;
+    if(visible){
+      this.container.classList.remove('hidden');
+    }else{
+      this.container.classList.add('hidden');
+    }
+  }
+
+  updateSoloing(which, checked){
+    if(checked){
+      this.stems.forEach(function(element, index){
+        if(which != index) element.classList.add('hidden');
+      });
+    }else{
+      this.stems.forEach(function(element, index){
+        element.classList.remove('hidden');
+      });
+    }
   }
 
   loadState(){
@@ -101,9 +175,13 @@ class SongGui {
   }
 
   saveState(){
+    var mythis = this;
+    this.status.innerHTML = 'saving';
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
+        mythis.status.innerHTML = '';
+        mythis.status_changed.innerHTML = '';
         console.log(JSON.parse(this.responseText));
       }
     };
@@ -114,69 +192,10 @@ class SongGui {
 }
 
 
-//const SongGui = function(parent){
-  //const mythis = this;
-  //this.parent = parent;
 
 
 
 
 
-
-  //this.ui = {
-    //stop() {
-    //  mythis.parent.stop();
-    //},
-    //trackorder: '0,1,2,3,4,5,6,7,8,9,10',
-    //displayOutline: false,
-    //maxSize: 6.0,
-    //speed: 5,
-    //height: 10,
-    //noiseStrength: 10.2,
-    //growthSpeed: 0.2,
-    //type: 'three',
-
-    //color0: "#ffae23", // CSS string
-    //color1: [ 0, 128, 255 ], // RGB array
-    //color2: [ 0, 128, 255, 0.3 ], // RGB with alpha
-    //color3: { h: 350, s: 0.9, v: 0.3 } // Hue, saturation, value
-  //};
-
-  //this.gui = new dat.gui.GUI();
-  //this.gui.remember(this.ui);
-  //this.gui.add(this.ui, 'stop');
-  //this.trackorder = this.gui.add(this.ui, 'trackorder');
-
-
-
-
-//};
-
-
-
-/*gui.add(ui, 'displayOutline');
-gui.add(ui, 'maxSize').min(-10).max(10).step(0.25);
-gui.add(ui, 'height').step(5); // Increment amount
-// Choose from accepted values
-gui.add(ui, 'type', [ 'one', 'two', 'three' ] );
-// Choose from named values
-gui.add(ui, 'speed', { Stopped: 0, Slow: 0.1, Fast: 5 } );
-var f1 = gui.addFolder('Colors');
-f1.open();
-f1.addColor(ui, 'color0');
-f1.addColor(ui, 'color1');
-f1.addColor(ui, 'color2');
-f1.addColor(ui, 'color3');
-var f2 = gui.addFolder('Another Folder');
-f2.add(ui, 'noiseStrength');
-var f3 = f2.addFolder('Nested Folder');
-f3.add(ui, 'growthSpeed');*/
-
-//onLoaded handler
-/*this.stop = function() {
-  if(typeof this.onStop === "function"){
-    this.onStop();
-  }
-};*/
 
 //

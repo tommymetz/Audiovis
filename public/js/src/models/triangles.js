@@ -8,6 +8,7 @@ class Triangles {
   }
 
   initTriangles() {
+
     //Triangles
     const CENTROID_LENGTH = this.stem.centroids[0].length;
     const MAX_POINTS = CENTROID_LENGTH * 2;
@@ -49,10 +50,14 @@ class Triangles {
   }
 
   updateTriangles() {
-
+    let volume = Math.log10(this.stem.volume[this.stem.frame] / this.stem.multiplyer * this.stem.factor * this.stem.maxvolume) / 1;
+    if(volume <= 0) volume = 0.0001;
+    this.triangles.scale.set(volume,volume,volume);
   }
 
-
+  updateColor(color){
+    this.triangles.material.color.set(color);
+  }
 
 
 

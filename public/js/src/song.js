@@ -1,5 +1,5 @@
 class Song {
-  constructor(parent, location, songjsonfile, attributesjson, scene, audiolistener, fps) {
+  constructor(parent, location, songjsonfile, attributesjson, scene, audiolistener, fps, hide_controls=false) {
     const mythis = this;
     this.parent = parent;
     this.location = location;
@@ -8,16 +8,22 @@ class Song {
     this.scene = scene;
     this.audiolistener = audiolistener;
     this.fps = fps;
+    this.hide_controls = hide_controls;
 
     //Variables
+    this.active = false;
     this.audiotrack = new THREE.Audio(this.audiolistener);
     this.scene.add(this.audiotrack);
     this.mp3file;
-    this.audiotrack;
+    this.firststarttime = 0;
+    this.ignoreending = false;
     this.stemnames = [];
     this.stems = [];
     this.loadingstage = 0;
     this.order = [];
+    this.colors = [];
+    this.loaded = false;
+    this.visible = false;
 
     this.gui = new SongGui(this);
 
@@ -27,11 +33,12 @@ class Song {
 
     this.frame = 0;
     this.offset = 0;
-    this.startframe = 0;
+    this.starttime = 0;
 
     //onLoaded handler
     this.isLoaded = function() {
       if(typeof this.onLoaded === "function"){
+        this.loaded = true;
         this.gui.init();
         this.onLoaded();
       }
@@ -48,13 +55,45 @@ class Song {
         const json = JSON.parse(response);
         mythis.attributes = json;
 
+        //Colors
+        if(mythis.attributes.colors.length == 0){
+
+          //Populate with colorset
+          let colorindex = 0;
+          let colorset = eval(mythis.attributes.colorset);
+          mythis.stemnames.forEach(function(element, index){
+            mythis.colors.push(colorset[colorindex]);
+            colorindex++;
+            if(index == colorset.length-1) colorindex = 0;
+          });
+        }else{
+          mythis.colors = mythis.attributes.colors;
+        }
+
+        //Order
+        if(mythis.attributes.order.length == 0){
+          mythis.stemnames.forEach(function(element, index){
+            mythis.order.push(index);
+          });
+        }else{
+          mythis.order = mythis.attributes.order;
+        }
+
         //Load mp3file
         const loader = new THREE.AudioLoader();
         loader.load(mythis.location + mythis.mp3file, audioBuffer => {
           mythis.audiotrack.setBuffer( audioBuffer );
           mythis.audiotrack.setLoop(false);
           mythis.audiotrack.setVolume(1.0);
-          mythis.order = mythis.attributes.order;
+          mythis.audiotrack.onEnded = function(){
+            if(!mythis.ignoreending){
+              console.log('ended');
+              if(mythis.visible){
+                mythis.updateVisibility(false);
+                mythis.parent.nextsong();
+              }
+            }
+          };
 
           //Create stems
           for(let i=0; i<mythis.stemnames.length; i++){
@@ -68,12 +107,8 @@ class Song {
   createStem(name, i, order) {
     const mythis = this;
 
-    //Attributes
-    //this.colors = new window[this.attributes.colors];
-    this.colors = colorsWarmCold;
-
     //Create the stem
-    const thestem = new Stem(this.location, name, i, order, this.scene, this.stemgroup, this.colors);
+    const thestem = new Stem(this.location, name, i, order, this.scene, this.stemgroup, this.colors[i]);
     thestem.onLoaded = () => {
 
       //If all stems are loaded
@@ -90,30 +125,93 @@ class Song {
     return thestem;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  //VISUALS/////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  updateVisibility(visible){
+    this.visible = visible;
+    if(this.hide_controls){
+      this.gui.updateVisibility(false);
+    }else{
+      this.gui.updateVisibility(visible);
+    }
+    for(let i=0; i<this.stemnames.length; i++){
+      this.stems[i].updateVisibility(visible);
+    }
+  }
+
   updateStemOrder(order){
     for(let i=0; i<this.stemnames.length; i++){
       this.stems[i].updateOrder(order[i]);
     }
   }
 
-  play(offset) {
-    if(offset) this.offset = offset;
-    this.offsetframes = this.offset * this.fps;
-
-    //Play
-    this.startframe = this.frame;
-    this.audiotrack.offset = this.offset;
-    this.audiotrack.play();
+  updateStemColor(which, color){
+    this.stems[which].updateColors(color);
   }
 
-  updateAnimation(frame) {
-    this.frame = frame;
-    var frame = this.frame - this.startframe + this.offsetframes;
-    for(let i=0; i<this.stems.length; i++){
-      this.stems[i].updateAnimation(frame);
+  updateSoloing(which, checked){
+    if(checked){
+      this.stems.forEach(function(element, index){
+        if(which != index) element.hide();
+      });
+    }else{
+      this.stems.forEach(function(element, index){
+        element.show();
+      });
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  //PLAYBACK////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  play(offset = 0) {
+    var mythis = this;
+    this.offset = offset;
+    this.offsetframes = this.offset * this.fps;
+
+    //Playback
+    if(this.audiotrack.isPlaying) this.audiotrack.stop();
+    this.audiotrack.offset = this.offset;
+    this.audiotrack.play();
+    this.starttime = this.audiotrack.startTime;
+    this.updateVisibility(true);
+  }
+
+  stop(){
+    this.updateVisibility(false);
+    if(this.audiotrack.isPlaying) this.audiotrack.stop();
+  }
+
+  fastforward(){
+    var mythis = this;
+    this.ignoreending = true;
+    var time = this.audiotrack.offset + 10;
+    if(time < this.audiotrack.buffer.duration){
+      this.play(time);
+      setTimeout(function(){ mythis.ignoreending = false; }, 10); //Revert after ending fired
+    }else{
+      this.updateVisibility(false);
+      this.parent.nextsong();
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  //ANIMATE/////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  updateAnimation() {
+    if(this.visible){
+      var audioframe = (this.audiotrack.context.currentTime - this.starttime) * this.fps;
+      this.frame = Math.round(audioframe + this.offsetframes); //1000ms / 24fps = 41.666666666
+      for(let i=0; i<this.stems.length; i++){
+        this.stems[i].updateAnimation(this.frame);
+      }
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  //UTIL////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   loadJSON(file, callback) {
     const xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
@@ -124,6 +222,10 @@ class Song {
     xobj.send(null);
   }
 
+
+
+
+  //var audioframe = Math.round((this.audiotrack.context.currentTime - this.audiotrack.startTime) * this.fps) - this.startframe + this.offsetframes; //1000ms / 24fps = 41.666666666
 
 
 

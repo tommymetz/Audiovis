@@ -10,6 +10,7 @@
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-contrib-watch": "^1.0.0",
+    "node-osc": "^2.1.0",
     "socket.io": "^2.0.4",
     "sortablejs": "^1.7.0",
     "stats.js": "^0.17.0",
@@ -18,7 +19,7 @@
   "scripts": {
     "playlist": "python processor/playlist.py",
     "analysis": "python processor/main.py",
-    "build": "grunt uglify",
+    "build": "grunt sass & grunt uglify",
     "start": "node index.js"
   }
 }
