@@ -137,12 +137,15 @@
 
         //Foreach Song, load hidden
         let songcount = mythis.playlist.songs.length;
+        let songi = 0;
         //let songcount = 2;
         for(let i=0; i<songcount; i++){
           location = 'content/'+mythis.playlist.songs[i]+'/';
           mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
           mythis.songs[i].onLoaded = () => {
             console.log(mythis.songs[i]);
+            songi++;
+            mythis.loadingdiv.innerHTML = 'loading song '+songi+' of '+songcount;
 
             //Detect when all loaded
             let loaded = true;
