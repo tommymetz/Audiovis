@@ -45,13 +45,15 @@ class Song {
     };
 
     //Load JSON
-    mythis.loadJSON(`${mythis.location + mythis.songjsonfile}?v=${Math.round(Math.random()*1000)}`, response => {
+    //mythis.loadJSON(`${mythis.location + mythis.songjsonfile}?v=${Math.round(Math.random()*1000)}`, response => {
+    mythis.loadJSON(`${mythis.location + mythis.songjsonfile}`, response => {
       const json = JSON.parse(response);
       mythis.mp3file = json[0].mp3file;
       mythis.stemnames = json[0].audiofiles;
 
       //Load attributes
-      mythis.loadJSON(`${mythis.location + mythis.attributesjson}?v=${Math.round(Math.random()*1000)}`, response => {
+      //mythis.loadJSON(`${mythis.location + mythis.attributesjson}?v=${Math.round(Math.random()*1000)}`, response => {
+      mythis.loadJSON(`${mythis.location + mythis.attributesjson}`, response => {
         const json = JSON.parse(response);
         mythis.attributes = json;
 
