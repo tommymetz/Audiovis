@@ -14,7 +14,7 @@ class SceneGui {
     //Gui Container
     this.container = document.createElement('div');
     this.parent.container.appendChild(this.container);
-    this.container.setAttribute('class', 'scene-gui gui-container');
+    this.container.setAttribute('class', 'scene-gui gui-container hidden');
 
       //Menu Bar
       this.menu = document.createElement('div');
@@ -22,9 +22,9 @@ class SceneGui {
       this.menu.setAttribute('class', 'gui-menu');
 
         //Playlist Title
-        this.title = document.createElement('div');
+        /*this.title = document.createElement('div');
         this.menu.appendChild(this.title);
-        this.title.setAttribute('class', 'gui-item gui-item_title');
+        this.title.setAttribute('class', 'gui-item gui-item_title hidden');
 
         //Changed
         this.status_changed = document.createElement('div');
@@ -34,7 +34,7 @@ class SceneGui {
         //Loading
         this.status = document.createElement('div');
         this.menu.appendChild(this.status);
-        this.status.setAttribute('class', 'gui-item gui-item_status');
+        this.status.setAttribute('class', 'gui-item gui-item_status');*/
 
         //Stop Play
         this.button_stopplay = document.createElement('a');
@@ -44,11 +44,11 @@ class SceneGui {
         this.button_stopplay.innerHTML = 'stop';
 
         //Fast Forward
-        this.button_fastforward = document.createElement('a');
+        /*this.button_fastforward = document.createElement('a');
         this.menu.appendChild(this.button_fastforward);
         this.button_fastforward.setAttribute('class', 'gui-item');
         this.button_fastforward.setAttribute('href', '#');
-        this.button_fastforward.innerHTML = 'ff';
+        this.button_fastforward.innerHTML = 'ff';*/
 
         //Next Song
         this.button_nextsong = document.createElement('a');
@@ -67,18 +67,19 @@ class SceneGui {
 
   init(){
     const mythis = this;
+    this.updateVisibility(true);
 
-    this.title.innerHTML = this.parent.playlist.name;
+    //this.title.innerHTML = this.parent.playlist.name;
 
     //Menu Buttons
     this.button_stopplay.addEventListener('click', e => {
       e.preventDefault();
       mythis.stopplay();
     });
-    this.button_fastforward.addEventListener('click', e => {
+    /*this.button_fastforward.addEventListener('click', e => {
       e.preventDefault();
       mythis.fastforward();
-    });
+    });*/
     this.button_nextsong.addEventListener('click', e => {
       e.preventDefault();
       mythis.nextsong();

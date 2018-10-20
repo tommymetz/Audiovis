@@ -46,8 +46,10 @@ module.exports = function(grunt) {
 							'node_modules/three/examples/js/controls/OrbitControls.js',
 							'node_modules/stats.js/build/stats.min.js',
 							'node_modules/dat.gui/build/dat.gui.min.js',
+							//'public/js/Sortable.min.js',
 							//'public/js/src/*.js',
-							//'public/js/src/models/*.js'
+							//'public/js/src/models/*.js',
+							//'public/js/src/colors/*.js'
 						]
 					},
 		  	},

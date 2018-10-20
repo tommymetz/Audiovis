@@ -26,13 +26,13 @@
       this.socket = io.connect('http://localhost:3000');
       this.export = false; //Not really working
       this.stop_on_next = false;
-      this.hide_controls = false;
+      this.hide_controls = true;
 
       //Scene variables
       this.container = document.getElementById('container');
       this.loadingdiv = document.getElementById('loading');
       this.scene = new THREE.Scene();
-      this.renderer = new THREE.WebGLRenderer({ antialias: true });
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       this.camera = new THREE.PerspectiveCamera(8, window.innerWidth / window.innerHeight, 0.1, 10000);
       this.cameralookat = new THREE.Vector3(0, 1.2, 0);
       this.renderer.shadowMap.enabled = true;
@@ -52,7 +52,7 @@
       this.currentsong = 0;
 
       this.gui = new SceneGui(this);
-      if(this.hide_controls) this.gui.updateVisibility(false);
+      //if(this.hide_controls) this.gui.updateVisibility(false);
 
       //Stats
       this.stats = new Stats();
@@ -108,11 +108,11 @@
       //this.scene.add( helper );
 
       //Sky Fog
-      const skyBoxGeometry = new THREE.CubeGeometry( 20, 20, 20);
+      /*const skyBoxGeometry = new THREE.CubeGeometry( 20, 20, 20);
       const skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, side: THREE.BackSide } );
       const skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
       skyBox.name = 'skybox';
-      this.scene.add(skyBox);
+      this.scene.add(skyBox);*/
 
       //Floor
       const geometry = new THREE.PlaneGeometry( 2, 4 );
