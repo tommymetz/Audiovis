@@ -9,8 +9,10 @@ class Stem {
     this.color = color;
 
     //Variables
-    this.jsonfile = `${this.name}_analysis.json?v=${Math.round(Math.random()*1000)}`;
-    this.datafile = `${this.name}_analysis.data?v=${Math.round(Math.random()*1000)}`;
+    //this.jsonfile = `${this.name}_analysis.json?v=${Math.round(Math.random()*1000)}`;
+    this.jsonfile = `${this.name}_analysis.json`;
+    //this.datafile = `${this.name}_analysis.data?v=${Math.round(Math.random()*1000)}`;
+    this.datafile = `${this.name}_analysis.data`;
     this.steminfo;
     this.datastructure;
     this.loaded = false;
