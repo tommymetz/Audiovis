@@ -23,7 +23,7 @@
       const mythis = this;
 
       //Backend connection
-      this.socket = io.connect('http://localhost:3000');
+      /*this.socket = io.connect('http://localhost:3000');*/
       this.export = false; //Not really working
       this.stop_on_next = false;
       this.hide_controls = true;
@@ -244,7 +244,7 @@
         this.then = this.now - (this.delta % this.interval);
         this.renderer.render(this.scene, this.camera);
         if(this.export){
-          this.socket.emit('render-frame', {frame: mythis.frame, file: document.querySelector('canvas').toDataURL()});
+          //this.socket.emit('render-frame', {frame: mythis.frame, file: document.querySelector('canvas').toDataURL()});
         }
         this.stats.update();
         this.frame = Math.round((this.now - this.animationstart) / 41.666666666); //1000ms / 24fps = 41.666666666
