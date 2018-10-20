@@ -50,7 +50,8 @@ class Stem {
       //If not all quite samples, load the data file. Otherwise deactivate.
       if(!mythis.json.track.allquietsamples){
         const oReqs = new XMLHttpRequest();
-        oReqs.open("GET", `${mythis.location + mythis.json.track.filename}_analysis.data?v=${Math.round(Math.random()*1000)}`, true);
+        //oReqs.open("GET", `${mythis.location + mythis.json.track.filename}_analysis.data?v=${Math.round(Math.random()*1000)}`, true);
+        oReqs.open("GET", `${mythis.location + mythis.json.track.filename}_analysis.data`, true);
         oReqs.responseType = "arraybuffer";
         oReqs.onload = function (oEvent) {
           if(this.response){
