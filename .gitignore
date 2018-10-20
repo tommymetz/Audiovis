@@ -1,6 +1,5 @@
 _trash
 .DS_Store
 node_modules
-public/content/*
 .sass-cache
 AudioTestFile Project/AudioTestFile.wav
