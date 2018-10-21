@@ -12,6 +12,17 @@ body{
 	color:#fff;
 	font-size: 16px;
 }
+#multidim{
+	display:block;
+	background-image: url('../img/mdim.png');
+	background-size: contain;
+	width:100px;
+	height:100px;
+	position: absolute;
+	bottom:0px;
+	left:10px;
+	z-index: 1000;
+}
 .gui-container{
 	position: absolute;
 	z-index: 1000;

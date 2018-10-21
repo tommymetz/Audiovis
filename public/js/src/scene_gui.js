@@ -57,6 +57,12 @@ class SceneGui {
         this.button_nextsong.setAttribute('href', '#');
         this.button_nextsong.innerHTML = 'next';
 
+        //Buy
+        this.button_buy = document.createElement('a');
+        this.menu.appendChild(this.button_buy);
+        this.button_buy.setAttribute('class', 'gui-item');
+        this.button_buy.setAttribute('href', 'http://multidim.net/releases/horizon');
+        this.button_buy.innerHTML = 'buy';
 
       //Stems - https://github.com/RubaXa/Sortable
       this.stems = [];

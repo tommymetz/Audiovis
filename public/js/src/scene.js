@@ -33,7 +33,7 @@
       this.loadingdiv = document.getElementById('loading');
       this.scene = new THREE.Scene();
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      this.camera = new THREE.PerspectiveCamera(8, window.innerWidth / window.innerHeight, 0.1, 10000);
+      this.camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 10000);
       this.cameralookat = new THREE.Vector3(0, 1.2, 0);
       this.renderer.shadowMap.enabled = true;
       this.renderer.setSize(window.innerWidth, window.innerHeight);
