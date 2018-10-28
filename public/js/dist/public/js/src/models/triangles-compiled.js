@@ -16,13 +16,15 @@ function () {
     this.scene = scene;
     this.stem = stem;
     this.color = color;
+    this.zeroed = false;
+    this.yoffset = 0.15;
     this.initTriangles();
+    this.generateTriangleGeometry();
   }
 
   _createClass(Triangles, [{
     key: "initTriangles",
     value: function initTriangles() {
-      //Triangles
       var CENTROID_LENGTH = this.stem.centroids[0].length;
       var MAX_POINTS = CENTROID_LENGTH * 2;
       var geometry = new THREE.BufferGeometry();
@@ -37,8 +39,19 @@ function () {
       });
       this.triangles = new THREE.Mesh(geometry, material);
       this.triangles.position.x = 0;
-      this.triangles.position.y = this.stem.offsety;
-      this.stem.rootobject.add(this.triangles);
+      this.triangles.position.y = this.yoffset; //this.triangles.position.y = this.stem.offsety;
+
+      this.stem.rootobject.add(this.triangles); //Triangles Mirror
+
+      this.trianglesmirror = new THREE.Mesh(geometry, material);
+      this.trianglesmirror.position.x = 0;
+      this.trianglesmirror.position.y = this.yoffset;
+      this.trianglesmirror.rotation.y = Math.PI / 1;
+      this.stem.rootobject.add(this.trianglesmirror);
+    }
+  }, {
+    key: "generateTriangleGeometry",
+    value: function generateTriangleGeometry() {
       var positions = this.triangles.geometry.attributes.position.array;
       var positionlength = positions.length / 3;
       var trianglecount = 10; //positionlength/3;
@@ -72,13 +85,26 @@ function () {
     key: "updateTriangles",
     value: function updateTriangles() {
       var volume = Math.log10(this.stem.volume[this.stem.frame] / this.stem.multiplyer * this.stem.factor * this.stem.maxvolume) / 1;
+
+      if (volume <= 0.5) {
+        if (!this.zeroed) {
+          this.generateTriangleGeometry();
+          this.zeroed = true;
+        }
+      } else {
+        if (this.zeroed) this.zeroed = false;
+      } //Scale
+
+
       if (volume <= 0) volume = 0.0001;
       this.triangles.scale.set(volume, volume, volume);
+      this.trianglesmirror.scale.set(volume, volume, volume);
     }
   }, {
     key: "updateColor",
     value: function updateColor(color) {
       this.triangles.material.color.set(color);
+      this.trianglesmirror.material.color.set(color);
     } //
 
   }]);

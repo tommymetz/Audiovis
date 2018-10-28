@@ -10,8 +10,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   //Detect and start game
   window.onload = function () {
     if (Detector.webgl) {
-      ua = navigator.userAgent;
-      console.log('ua', ua);
+      ua = navigator.userAgent; //console.log('ua', ua);
+
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
 
       if (is_ie) {
@@ -149,8 +149,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         //Load playlist json
 
         this.loadJSON('content/_playlist.json', function (response) {
-          mythis.playlist = JSON.parse(response);
-          console.log('playlist', mythis.playlist); //Songs
+          mythis.playlist = JSON.parse(response); //console.log('playlist', mythis.playlist);
+          //Songs
 
           mythis.songs = [];
           var location = ''; //Foreach Song, load hidden
@@ -158,14 +158,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var songcount = mythis.playlist.songs.length;
           var songi = 0; //let songcount = 2;
 
-          var _loop = function _loop(i) {
+          for (var i = 0; i < songcount; i++) {
             location = 'content/' + mythis.playlist.songs[i] + '/';
             mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
 
             mythis.songs[i].onLoaded = function () {
-              console.log(mythis.songs[i]);
+              //console.log(mythis.songs[i]);
               songi++;
-              mythis.loadingdiv.innerHTML = 'loading song ' + songi + ' of ' + songcount; //Detect when all loaded
+              mythis.loadingdiv.innerHTML = '<img src="img/loading-icon.gif" width="30" /><br>Loading Interactive Experience<br>Song ' + songi + ' of ' + songcount + ' loaded'; //Detect when all loaded
 
               var loaded = true;
 
@@ -179,10 +179,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 mythis.preloaded();
               }
             };
-          };
-
-          for (var i = 0; i < songcount; i++) {
-            _loop(i);
           }
         });
       }
@@ -192,7 +188,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         var mythis = this;
         this.loadingdiv.style.visibility = 'hidden';
         setTimeout(function () {
-          console.log('preloaded');
+          //console.log('preloaded');
           mythis.gui.init();
           mythis.initAnimate();
           mythis.play(mythis.currentsong);

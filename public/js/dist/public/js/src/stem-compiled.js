@@ -138,8 +138,9 @@ function () {
       var material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
         transparent: true,
-        opacity: 0.03
-      });
+        opacity: 0.00
+      }); //0.03
+
       this.rootobject = new THREE.Mesh(geometry, material);
       this.rootobject.visible = this.visible;
       this.rootobject.name = 'rootobject';
@@ -155,6 +156,7 @@ function () {
         color: 0x000000
       });
       this.otherobject = new THREE.Mesh(geometry, material);
+      this.otherobject.visible = false;
       this.rootobject.add(this.otherobject); //Report done loading
 
       this.isLoaded();

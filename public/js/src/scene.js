@@ -4,7 +4,7 @@
   window.onload = () => {
     if(Detector.webgl){
       ua = navigator.userAgent;
-      console.log('ua', ua);
+      //console.log('ua', ua);
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
       if(is_ie){
         document.getElementById('loading').innerHTML = 'Please use a different browser. This site works best in Chrome.';
@@ -136,7 +136,7 @@
       //Load playlist json
       this.loadJSON('content/_playlist.json', response => {
         mythis.playlist = JSON.parse(response);
-        console.log('playlist', mythis.playlist);
+        //console.log('playlist', mythis.playlist);
 
         //Songs
         mythis.songs = [];
@@ -150,9 +150,9 @@
           location = 'content/'+mythis.playlist.songs[i]+'/';
           mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
           mythis.songs[i].onLoaded = () => {
-            console.log(mythis.songs[i]);
+            //console.log(mythis.songs[i]);
             songi++;
-            mythis.loadingdiv.innerHTML = 'loading song '+songi+' of '+songcount;
+            mythis.loadingdiv.innerHTML = '<img src="img/loading-icon.gif" width="30" /><br>Loading Interactive Experience<br>Song '+songi+' of '+songcount+' loaded';
 
             //Detect when all loaded
             let loaded = true;
@@ -174,7 +174,7 @@
       var mythis = this;
       this.loadingdiv.style.visibility='hidden';
       setTimeout(function(){
-        console.log('preloaded');
+        //console.log('preloaded');
         mythis.gui.init();
         mythis.initAnimate();
         mythis.play(mythis.currentsong);
