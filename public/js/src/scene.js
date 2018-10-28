@@ -7,14 +7,14 @@
       console.log('ua', ua);
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
       if(is_ie){
-        document.getElementById('container').innerHTML = 'Please use a different browser. This site works best in Chrome.';
+        document.getElementById('loading').innerHTML = 'Please use a different browser. This site works best in Chrome.';
       }else{
         const theScene = new Scene();
       }
     }else{
       const warning = Detector.getWebGLErrorMessage();
       console.log('webgl warning', warning);
-      document.getElementById('container').innerHTML = 'This browser does not support WebGL';
+      document.getElementById('loading').innerHTML = 'This browser does not support WebGL';
     }
   }
 
