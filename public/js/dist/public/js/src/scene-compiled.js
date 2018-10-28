@@ -15,14 +15,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
 
       if (is_ie) {
-        document.getElementById('game').innerHTML = 'Please use a different browser. This site works best in Chrome.';
+        document.getElementById('container').innerHTML = 'Please use a different browser. This site works best in Chrome.';
       } else {
         var theScene = new Scene();
       }
     } else {
       var warning = Detector.getWebGLErrorMessage();
       console.log('webgl warning', warning);
-      document.getElementById('game').innerHTML = 'This browser does not support WebGL';
+      document.getElementById('container').innerHTML = 'This browser does not support WebGL';
     }
   }; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
