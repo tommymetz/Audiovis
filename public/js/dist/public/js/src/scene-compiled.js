@@ -10,7 +10,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   //Detect and start game
   window.onload = function () {
     if (Detector.webgl) {
-      var theScene = new Scene();
+      ua = navigator.userAgent;
+      console.log('ua', ua);
+      var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
+
+      if (is_ie) {
+        document.getElementById('game').innerHTML = 'Please use a different browser. This site works best in Chrome.';
+      } else {
+        var theScene = new Scene();
+      }
     } else {
       var warning = Detector.getWebGLErrorMessage();
       console.log('webgl warning', warning);
