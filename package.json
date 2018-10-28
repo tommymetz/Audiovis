@@ -21,5 +21,10 @@
     "analysis": "python processor/main.py",
     "build": "grunt sass & grunt uglify",
     "start": "node index.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "grunt-babel": "^8.0.0"
   }
 }

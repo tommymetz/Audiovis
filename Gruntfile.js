@@ -37,23 +37,44 @@ module.exports = function(grunt) {
 		////////////////////////////////////////////////////
 		//UGLIFY////////////////////////////////////////////
 		////////////////////////////////////////////////////
-		uglify: {
+		/*uglify: {
 		  	dist: {
 					files: {
-			  		'public/js/<%= pkg.name %>.min.js': [
+			  		'public/js/dependencies.min.js': [
 							'node_modules/three/build/three.js',
 							'node_modules/three/examples/js/Detector.js',
 							'node_modules/three/examples/js/controls/OrbitControls.js',
 							'node_modules/stats.js/build/stats.min.js',
 							'node_modules/dat.gui/build/dat.gui.min.js',
-							//'public/js/Sortable.min.js',
+							'public/js/Sortable.min.js',
 							//'public/js/src/*.js',
 							//'public/js/src/models/*.js',
 							//'public/js/src/colors/*.js'
 						]
 					},
 		  	},
-    },
+    },*/
+
+		uglify: {
+				all_src : {
+						options : {
+							sourceMap : true,
+							sourceMapName : 'public/js/all.min.map'
+						},
+						src : [
+							'node_modules/three/build/three.js',
+							'node_modules/three/examples/js/Detector.js',
+							'node_modules/three/examples/js/controls/OrbitControls.js',
+							'node_modules/stats.js/build/stats.min.js',
+							'node_modules/dat.gui/build/dat.gui.min.js',
+							'public/js/Sortable.min.js',
+							'public/js/dist/public/js/src/*-compiled.js',
+							'public/js/dist/public/js/src/models/*-compiled.js',
+							'public/js/dist/public/js/src/colors/*-compiled.js'
+						],
+						dest : 'public/js/all.min.js'
+				}
+		},
 
 		////////////////////////////////////////////////////
 		//WATCH/////////////////////////////////////////////
@@ -63,8 +84,30 @@ module.exports = function(grunt) {
 				'public/css/scss/*',
 				'public/js/src/*'
 			],
-			tasks: ['jshint','sass']
+			tasks: ['jshint', 'sass']
 		},
+
+		////////////////////////////////////////////////////
+		//BABEL/////////////////////////////////////////////
+		////////////////////////////////////////////////////
+		babel: {
+    	options: {
+	      sourceMap: true,
+	      presets: ['@babel/preset-env']
+	    },
+	    dist: {
+	      files: [{
+            "expand": true,
+            "src": [
+							'public/js/src/*.js',
+							'public/js/src/models/*.js',
+							'public/js/src/colors/*.js'
+						],
+            "dest": "public/js/dist/",
+            "ext": "-compiled.js"
+        }]
+	    }
+	  },
 
 	}); //END grunt.initConfig
 
@@ -73,8 +116,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-babel');
 
 	//REGISTER TASKS
-	grunt.registerTask('default', [ 'jshint', 'uglify', 'sass']);
+	grunt.registerTask('default', [ 'jshint', 'sass', 'babel', 'uglify']);
 
 };
