@@ -187,6 +187,8 @@
     play(which){
       if(which) this.currentsong = which;
       this.songs[this.currentsong].play(0);
+      var title = '"' + this.songs[this.currentsong].mp3file.substring(0, this.songs[this.currentsong].mp3file.length - 4) + '"';
+      this.gui.updateSongTitle(title);
     }
 
     stopplay() {

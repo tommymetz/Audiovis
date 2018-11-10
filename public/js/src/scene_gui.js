@@ -44,11 +44,11 @@ class SceneGui {
         this.button_stopplay.innerHTML = 'stop';
 
         //Fast Forward
-        /*this.button_fastforward = document.createElement('a');
+        this.button_fastforward = document.createElement('a');
         this.menu.appendChild(this.button_fastforward);
         this.button_fastforward.setAttribute('class', 'gui-item');
         this.button_fastforward.setAttribute('href', '#');
-        this.button_fastforward.innerHTML = 'ff';*/
+        this.button_fastforward.innerHTML = 'ff';
 
         //Next Song
         this.button_nextsong = document.createElement('a');
@@ -65,10 +65,16 @@ class SceneGui {
         this.button_buy.innerHTML = 'get';
 
       //Stems - https://github.com/RubaXa/Sortable
-      this.stems = [];
+      /*this.stems = [];
       this.stems_list = document.createElement('ul');
       this.container.appendChild(this.stems_list);
-      this.stems_list.setAttribute('class', 'gui-list');
+      this.stems_list.setAttribute('class', 'gui-list');*/
+
+      //Song Title
+      this.song_title = document.createElement('div');
+      this.container.appendChild(this.song_title);
+      this.song_title.setAttribute('class', 'gui-song-title');
+      this.song_title.innerHTML = 'Glissline - Horizon';
   }
 
   init(){
@@ -82,10 +88,10 @@ class SceneGui {
       e.preventDefault();
       mythis.stopplay();
     });
-    /*this.button_fastforward.addEventListener('click', e => {
+    this.button_fastforward.addEventListener('click', e => {
       e.preventDefault();
       mythis.fastforward();
-    });*/
+    });
     this.button_nextsong.addEventListener('click', e => {
       e.preventDefault();
       mythis.nextsong();
@@ -93,6 +99,9 @@ class SceneGui {
   }
 
 
+  updateSongTitle(title){
+    this.song_title.innerHTML = title;
+  }
 
   updateVisibility(visible){
     this.visible = visible;

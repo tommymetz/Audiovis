@@ -49,11 +49,17 @@ body{
 		left:50%;
 		transform: translateX(-50%);
 		width:auto;
-		background-color: #3c3c5c;
+		//background-color: #3c3c5c;
+		border:none;
+
+		.gui-menu{
+			background-color: #3c3c5c;
+		}
 	}
 	&.song-gui{
 		right:0px;
 		height:100%;
+		background-color: #3c3c5c;
 	}
 
 	&.hidden{
@@ -70,6 +76,15 @@ body{
 
 	.gui-menu{
 		width:100%;
+	}
+
+	.gui-song-title{
+		text-transform: none;
+		text-align: center;
+		font-size: 11px;
+		font-weight: normal;
+		padding-top:5px;
+		color:#a7a7a7;
 	}
 
 	.gui-item{

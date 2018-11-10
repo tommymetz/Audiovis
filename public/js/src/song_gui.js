@@ -79,11 +79,19 @@ class SongGui {
     //});
     this.button_load.addEventListener('click', e => {
       e.preventDefault();
-      mythis.loadState();
+      if(this.visible){
+        mythis.loadState();
+      }else{
+        console.log('fuck off');
+      }
     });
     this.button_save.addEventListener('click', e => {
       e.preventDefault();
-      mythis.saveState();
+      if(this.visible){
+        mythis.saveState();
+      }else{
+        console.log('fuck off');
+      }
     });
 
     //Parameters

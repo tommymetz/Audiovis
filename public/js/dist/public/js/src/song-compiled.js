@@ -209,7 +209,7 @@ function () {
     value: function fastforward() {
       var mythis = this;
       this.ignoreending = true;
-      var time = this.audiotrack.offset + 10;
+      var time = this.audiotrack.context.currentTime + this.audiotrack.offset + 10;
 
       if (time < this.audiotrack.buffer.duration) {
         this.play(time);

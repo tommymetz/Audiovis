@@ -70,6 +70,8 @@ function () {
   _createClass(SongGui, [{
     key: "init",
     value: function init() {
+      var _this = this;
+
       var mythis = this;
       this.title.innerHTML = this.parent.mp3file; //Menu Buttons
       //this.button_stop.addEventListener('click', e => {
@@ -79,11 +81,21 @@ function () {
 
       this.button_load.addEventListener('click', function (e) {
         e.preventDefault();
-        mythis.loadState();
+
+        if (_this.visible) {
+          mythis.loadState();
+        } else {
+          console.log('fuck off');
+        }
       });
       this.button_save.addEventListener('click', function (e) {
         e.preventDefault();
-        mythis.saveState();
+
+        if (_this.visible) {
+          mythis.saveState();
+        } else {
+          console.log('fuck off');
+        }
       }); //Parameters
 
       this.state.colors = this.parent.colors;
