@@ -62,6 +62,7 @@ class SceneGui {
         this.menu.appendChild(this.button_buy);
         this.button_buy.setAttribute('class', 'gui-item');
         this.button_buy.setAttribute('href', 'http://multidim.net/releases/horizon');
+        this.button_buy.setAttribute('target', '_blank');
         this.button_buy.innerHTML = 'get';
 
       //Stems - https://github.com/RubaXa/Sortable
