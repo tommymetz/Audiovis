@@ -122,8 +122,8 @@
       this.scene.add(skyBox);*/
 
       //Floor
-      const geometry = new THREE.PlaneGeometry( 2, 4 );
-      const material = new THREE.MeshStandardMaterial( {color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.2} );
+      let geometry = new THREE.PlaneGeometry( 2, 4 );
+      let material = new THREE.MeshStandardMaterial( {color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.2} );
       this.floor = new THREE.Mesh( geometry, material );
       this.floor.position.set(0, 0, 0);
       this.floor.rotation.set(Math.PI / 2, 0, 0);
