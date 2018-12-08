@@ -3,4 +3,4 @@ _trash
 node_modules
 .sass-cache
 AudioTestFile Project/AudioTestFile.wav
-public/js/dist
+public/js/dist/*
