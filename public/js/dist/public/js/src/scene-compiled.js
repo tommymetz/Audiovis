@@ -10,7 +10,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   //Detect and start game
   window.onload = function () {
     if (Detector.webgl) {
-      ua = navigator.userAgent; //console.log('ua', ua);
+      var ua = navigator.userAgent; //console.log('ua', ua);
 
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
 
@@ -100,7 +100,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         this.orbitcontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement); //Camera
 
-        this.camera.position.set(0, 3, 26); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
+        this.camera.position.set(0, -10, 22); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
 
         this.camera.lookAt(this.cameralookat);
         window.addEventListener('resize', onWindowResize, false);
@@ -156,7 +156,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var location = ''; //Foreach Song, load hidden
 
           var songcount = mythis.playlist.songs.length;
-          var songi = 0; //let songcount = 2;
+          var songi = 0;
 
           for (var i = 0; i < songcount; i++) {
             location = 'content/' + mythis.playlist.songs[i] + '/';

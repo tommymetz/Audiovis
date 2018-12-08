@@ -42,20 +42,20 @@ module.exports = function(grunt) {
 				app: {
 					options : {
 						sourceMap : true,
-						sourceMapName : 'public/js/app.min.map'
+						sourceMapName : 'public/js/app.min.map' //dep.min.map
 					},
 					src : [
-						'node_modules/three/build/three.js',
-						'node_modules/three/examples/js/Detector.js',
-						'node_modules/three/examples/js/controls/OrbitControls.js',
-						'node_modules/stats.js/build/stats.min.js',
-						'node_modules/dat.gui/build/dat.gui.min.js',
-						'public/js/Sortable.min.js',
+						// 'node_modules/three/build/three.js',
+						// 'node_modules/three/examples/js/Detector.js',
+						// 'node_modules/three/examples/js/controls/OrbitControls.js',
+						// 'node_modules/stats.js/build/stats.min.js',
+						// 'node_modules/dat.gui/build/dat.gui.min.js',
+						// 'public/js/Sortable.min.js',
 						'public/js/dist/public/js/src/*-compiled.js',
 						'public/js/dist/public/js/src/models/*-compiled.js',
 						'public/js/dist/public/js/src/colors/*-compiled.js'
 					],
-					dest : 'public/js/app.min.js'
+					dest : 'public/js/app.min.js' //dep.min.map
 				}
 		},
 

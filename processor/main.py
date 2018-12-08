@@ -66,12 +66,12 @@ soxcommand = ['sox', TheFolder + masterfile, editfile, 'trim', str(startingpos)]
 if writemp3:
     outleft = check_output(soxcommand)
 
-# create mp3 - lame -b128 sample.wav sample.mp3
+# create mp3 - lame -b128 sample.wav sample.mp3, lame --abr 100 Details.wav Details.mp3
 mp3file = masterfile
 if mp3file.endswith('.wav'):
     mp3file = mp3file[:-4]
 mp3file = TheFolder + mp3file + '.mp3'
-lamecommand = ['lame', editfile, mp3file]
+lamecommand = ['lame', '--abr', '100', editfile, mp3file]
 if writemp3:
     outleft = check_output(lamecommand)
 

@@ -3,7 +3,7 @@
   //Detect and start game
   window.onload = () => {
     if(Detector.webgl){
-      ua = navigator.userAgent;
+      var ua = navigator.userAgent;
       //console.log('ua', ua);
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
       if(is_ie){
@@ -90,7 +90,7 @@
       this.orbitcontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
       //Camera
-      this.camera.position.set(0, 3, 26); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
+      this.camera.position.set(0, -10, 22); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
       this.camera.lookAt(this.cameralookat);
       window.addEventListener('resize', onWindowResize, false);
       function onWindowResize(){
@@ -145,7 +145,6 @@
         //Foreach Song, load hidden
         let songcount = mythis.playlist.songs.length;
         let songi = 0;
-        //let songcount = 2;
         for(let i=0; i<songcount; i++){
           location = 'content/'+mythis.playlist.songs[i]+'/';
           mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
