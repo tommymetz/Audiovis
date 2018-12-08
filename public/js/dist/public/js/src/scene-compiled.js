@@ -156,7 +156,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var location = ''; //Foreach Song, load hidden
 
           var songcount = mythis.playlist.songs.length;
-          var songi = 0;
+          var songi = 0; //songcount = 1;
 
           for (var i = 0; i < songcount; i++) {
             location = 'content/' + mythis.playlist.songs[i] + '/';

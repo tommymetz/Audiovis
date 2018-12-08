@@ -145,6 +145,7 @@
         //Foreach Song, load hidden
         let songcount = mythis.playlist.songs.length;
         let songi = 0;
+        //songcount = 1;
         for(let i=0; i<songcount; i++){
           location = 'content/'+mythis.playlist.songs[i]+'/';
           mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
