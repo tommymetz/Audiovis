@@ -104,6 +104,16 @@ class SceneGui {
     this.song_title.innerHTML = title;
   }
 
+  updateStopPlayButtonState(paused){
+    if(!paused){
+      this.button_stopplay.innerHTML = 'stop';
+      this.paused = false;
+    }else{
+      this.button_stopplay.innerHTML = 'play';
+      this.paused = true;
+    }
+  }
+
   updateVisibility(visible){
     this.visible = visible;
     if(visible){
@@ -125,10 +135,16 @@ class SceneGui {
   }
 
   fastforward(){
+    this.button_stopplay.innerHTML = 'stop';
+    this.paused = false;
+    document.getElementById('playdiv').style.display = 'none';
     this.parent.fastforward();
   }
 
   nextsong(){
+    this.button_stopplay.innerHTML = 'stop';
+    this.paused = false;
+    document.getElementById('playdiv').style.display = 'none';
     this.parent.nextsong();
   }
 

@@ -103,6 +103,17 @@ function () {
       this.song_title.innerHTML = title;
     }
   }, {
+    key: "updateStopPlayButtonState",
+    value: function updateStopPlayButtonState(paused) {
+      if (!paused) {
+        this.button_stopplay.innerHTML = 'stop';
+        this.paused = false;
+      } else {
+        this.button_stopplay.innerHTML = 'play';
+        this.paused = true;
+      }
+    }
+  }, {
     key: "updateVisibility",
     value: function updateVisibility(visible) {
       this.visible = visible;
@@ -129,11 +140,17 @@ function () {
   }, {
     key: "fastforward",
     value: function fastforward() {
+      this.button_stopplay.innerHTML = 'stop';
+      this.paused = false;
+      document.getElementById('playdiv').style.display = 'none';
       this.parent.fastforward();
     }
   }, {
     key: "nextsong",
     value: function nextsong() {
+      this.button_stopplay.innerHTML = 'stop';
+      this.paused = false;
+      document.getElementById('playdiv').style.display = 'none';
       this.parent.nextsong();
     } //loadState(){
     //  console.log('load scene');

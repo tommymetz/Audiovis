@@ -84,6 +84,7 @@
           mythis.preloaded();
         }else{
           mythis.stopplay();
+          mythis.gui.updateStopPlayButtonState(false);
         }
       });
 
@@ -176,12 +177,6 @@
             if(loaded){
               mythis.loadingdiv.style.visibility = 'hidden';
               mythis.playdiv.style.display = 'block';
-              //mythis.loadingdiv.innerHTML = 'Scroll around the objects with your mouse or finger.<br>Use the top controls to navigate the songs.';
-              //mythis.loadingdiv.innerHTML += '<br><br><a href="#" id="play-button">begin</a>';
-              //document.getElementById('play-button').addEventListener('click', e => {
-              //  e.preventDefault();
-                //mythis.preloaded();
-              //});
             }
           };
         }
@@ -192,7 +187,7 @@
     preloaded(){
       var mythis = this;
       this.app_preloaded = true;
-      this.loadingdiv.style.visibility='hidden';
+      this.loadingdiv.style.visibility = 'hidden';
       setTimeout(function(){
         //console.log('preloaded');
         mythis.gui.init();
@@ -226,10 +221,12 @@
     }
 
     fastforward(){
+      this.paused = false;
       this.songs[this.currentsong].fastforward();
     }
 
     nextsong(){
+      this.paused = false;
       if(this.stop_on_next){
         this.stopplay();
       }else{
