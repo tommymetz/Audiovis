@@ -96,8 +96,6 @@ function () {
 
           mythis.audiotrack.onEnded = function () {
             if (!mythis.ignoreending) {
-              console.log('ended');
-
               if (mythis.visible) {
                 mythis.updateVisibility(false);
                 mythis.parent.nextsong();

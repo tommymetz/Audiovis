@@ -42,20 +42,29 @@ module.exports = function(grunt) {
 				app: {
 					options : {
 						sourceMap : true,
-						sourceMapName : 'public/js/app.min.map' //dep.min.map
+						sourceMapName : 'public/js/app.min.map'
 					},
 					src : [
-						// 'node_modules/three/build/three.js',
-						// 'node_modules/three/examples/js/Detector.js',
-						// 'node_modules/three/examples/js/controls/OrbitControls.js',
-						// 'node_modules/stats.js/build/stats.min.js',
-						// 'node_modules/dat.gui/build/dat.gui.min.js',
-						// 'public/js/Sortable.min.js',
 						'public/js/dist/public/js/src/*-compiled.js',
 						'public/js/dist/public/js/src/models/*-compiled.js',
 						'public/js/dist/public/js/src/colors/*-compiled.js'
 					],
-					dest : 'public/js/app.min.js' //dep.min.map
+					dest : 'public/js/app.min.js'
+				},
+				dep: {
+					options : {
+						sourceMap : true,
+						sourceMapName : 'public/js/dep.min.map'
+					},
+					src : [
+						'node_modules/three/build/three.js',
+						'node_modules/three/examples/js/Detector.js',
+						'node_modules/three/examples/js/controls/OrbitControls.js',
+						'node_modules/stats.js/build/stats.min.js',
+						'node_modules/dat.gui/build/dat.gui.min.js',
+						'node_modules/sortablejs/Sortable.min.js'
+					],
+					dest : 'public/js/dep.min.js'
 				}
 		},
 
@@ -67,7 +76,7 @@ module.exports = function(grunt) {
 				'public/css/scss/*',
 				'public/js/src/*'
 			],
-			tasks: ['jshint', 'sass', 'babel', 'uglify']
+			tasks: ['jshint', 'sass', 'babel', 'uglify:app']
 		},
 
 		////////////////////////////////////////////////////
@@ -102,6 +111,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-babel');
 
 	//REGISTER TASKS
-	grunt.registerTask('default', [ 'jshint', 'sass', 'babel', 'uglify']);
+	grunt.registerTask('default', [ 'jshint', 'sass', 'babel', 'uglify:app']);
+	grunt.registerTask('dep', [ 'jshint', 'sass', 'babel', 'uglify:dep']);
 
 };

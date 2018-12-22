@@ -19,7 +19,8 @@
   "scripts": {
     "playlist": "python processor/playlist.py",
     "analysis": "python processor/main.py",
-    "build": "grunt sass & grunt uglify",
+    "build": "grunt",
+    "build-dep": "grunt dep",
     "start": "node index.js"
   },
   "devDependencies": {

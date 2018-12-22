@@ -38,6 +38,7 @@
       //Scene variables
       this.container = document.getElementById('container');
       this.loadingdiv = document.getElementById('loading');
+      this.playdiv = document.getElementById('playdiv');
       this.scene = new THREE.Scene();
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       this.camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -49,6 +50,7 @@
       this.camera.add(this.audiolistener);
 
       //Variables
+      this.app_preloaded = false;
       this.fps = 24;
       this.animationstart = 0;
       this.now;
@@ -73,6 +75,16 @@
       document.getElementById('game-stop').addEventListener('click', e => {
         e.preventDefault();
         mythis.stopplay();
+      });
+
+      document.getElementById('playdiv-begin').addEventListener('click', e => {
+        e.preventDefault();
+        mythis.playdiv.style.display = 'none';
+        if(!mythis.app_preloaded){
+          mythis.preloaded();
+        }else{
+          mythis.stopplay();
+        }
       });
 
       //Initialize
@@ -162,7 +174,14 @@
               }
             }
             if(loaded){
-              mythis.preloaded();
+              mythis.loadingdiv.style.visibility = 'hidden';
+              mythis.playdiv.style.display = 'block';
+              //mythis.loadingdiv.innerHTML = 'Scroll around the objects with your mouse or finger.<br>Use the top controls to navigate the songs.';
+              //mythis.loadingdiv.innerHTML += '<br><br><a href="#" id="play-button">begin</a>';
+              //document.getElementById('play-button').addEventListener('click', e => {
+              //  e.preventDefault();
+                //mythis.preloaded();
+              //});
             }
           };
         }
@@ -172,6 +191,7 @@
 
     preloaded(){
       var mythis = this;
+      this.app_preloaded = true;
       this.loadingdiv.style.visibility='hidden';
       setTimeout(function(){
         //console.log('preloaded');
@@ -191,14 +211,16 @@
       this.gui.updateSongTitle(title);
     }
 
-    stopplay() {
+    stopplay(){
       var mythis = this;
       if(this.paused){
         this.songs[this.currentsong].play();
+        this.playdiv.style.display = 'none';
         this.paused = false;
         requestAnimationFrame(() => { mythis.animate(); });
       }else{
         this.songs[this.currentsong].stop();
+        this.playdiv.style.display = 'block';
         this.paused = true;
       }
     }
@@ -242,7 +264,8 @@
 
     animate() {
       const mythis = this;
-      if(!this.paused){ requestAnimationFrame(() => { mythis.animate(); }); };
+      //if(!this.paused){ requestAnimationFrame(() => { mythis.animate(); }); };
+      requestAnimationFrame(() => { mythis.animate(); });
 
       //Frame quantization
       this.now = Date.now();

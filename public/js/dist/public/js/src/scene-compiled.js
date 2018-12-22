@@ -50,6 +50,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
       this.container = document.getElementById('container');
       this.loadingdiv = document.getElementById('loading');
+      this.playdiv = document.getElementById('playdiv');
       this.scene = new THREE.Scene();
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -63,6 +64,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.audiolistener = new THREE.AudioListener();
       this.camera.add(this.audiolistener); //Variables
 
+      this.app_preloaded = false;
       this.fps = 24;
       this.animationstart = 0;
       this.now;
@@ -85,6 +87,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       document.getElementById('game-stop').addEventListener('click', function (e) {
         e.preventDefault();
         mythis.stopplay();
+      });
+      document.getElementById('playdiv-begin').addEventListener('click', function (e) {
+        e.preventDefault();
+        mythis.playdiv.style.display = 'none';
+
+        if (!mythis.app_preloaded) {
+          mythis.preloaded();
+        } else {
+          mythis.stopplay();
+        }
       }); //Initialize
 
       this.initScene();
@@ -176,7 +188,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               }
 
               if (loaded) {
-                mythis.preloaded();
+                mythis.loadingdiv.style.visibility = 'hidden';
+                mythis.playdiv.style.display = 'block'; //mythis.loadingdiv.innerHTML = 'Scroll around the objects with your mouse or finger.<br>Use the top controls to navigate the songs.';
+                //mythis.loadingdiv.innerHTML += '<br><br><a href="#" id="play-button">begin</a>';
+                //document.getElementById('play-button').addEventListener('click', e => {
+                //  e.preventDefault();
+                //mythis.preloaded();
+                //});
               }
             };
           }
@@ -186,6 +204,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       key: "preloaded",
       value: function preloaded() {
         var mythis = this;
+        this.app_preloaded = true;
         this.loadingdiv.style.visibility = 'hidden';
         setTimeout(function () {
           //console.log('preloaded');
@@ -212,12 +231,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
         if (this.paused) {
           this.songs[this.currentsong].play();
+          this.playdiv.style.display = 'none';
           this.paused = false;
           requestAnimationFrame(function () {
             mythis.animate();
           });
         } else {
           this.songs[this.currentsong].stop();
+          this.playdiv.style.display = 'block';
           this.paused = true;
         }
       }
@@ -263,15 +284,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "animate",
       value: function animate() {
-        var mythis = this;
+        var mythis = this; //if(!this.paused){ requestAnimationFrame(() => { mythis.animate(); }); };
 
-        if (!this.paused) {
-          requestAnimationFrame(function () {
-            mythis.animate();
-          });
-        }
-
-        ; //Frame quantization
+        requestAnimationFrame(function () {
+          mythis.animate();
+        }); //Frame quantization
 
         this.now = Date.now();
         this.delta = this.now - this.then;
