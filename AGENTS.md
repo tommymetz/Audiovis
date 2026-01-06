@@ -138,10 +138,11 @@ Audiovis_1.0_Horizon/
 
 ### Phase 1: Essential Security & Maintenance
 - [ ] **Update Node.js dependencies** to address security vulnerabilities
-  - [ ] Upgrade Socket.IO from v2.1.1 to v4.x
-  - [ ] Update Express to v4.x latest
+  - [ ] Upgrade Socket.IO from v2.1.1 to v4.x (multiple security advisories)
+  - [ ] Update Express to v4.x latest (security patches)
   - [ ] Replace deprecated `new Buffer()` with `Buffer.from()` in `index.js`
-  - [ ] Update all other dependencies to latest stable versions
+  - [ ] Update dependencies with known security vulnerabilities or critical patches
+  - [ ] Update dependencies that are 2+ major versions behind latest stable
 - [ ] **Update Three.js** from v0.89.0 to latest (v0.160+)
   - [ ] Update Three.js imports and API usage
   - [ ] Replace deprecated OrbitControls import
@@ -375,8 +376,10 @@ npm run format
 - WebGL 1.0 support via Three.js v0.89
 
 ### Recommended Modern Target
-- Modern browsers (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
-- ES2020+ native support
+- Modern browsers from the last 2-3 years (evergreen browsers with auto-updates)
+  - Chrome 100+, Firefox 100+, Safari 15+, Edge 100+ (as of 2024)
+  - Update these versions as time progresses
+- ES2020+ native support (or latest stable ECMAScript features)
 - WebGL 2.0 support
 - No IE11 support needed
 
