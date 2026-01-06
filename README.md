@@ -18,7 +18,7 @@ Horizon is an interactive audio-visual experience that combines Three.js 3D grap
   - Waiting For Time
 - **Real-time Audio Analysis**: Python-based audio processing and spectral analysis
 - **Responsive Controls**: Mouse/touch navigation and song controls
-- **Socket.io Integration**: Real-time frame rendering capabilities
+- **Socket.IO Integration**: Real-time frame rendering capabilities
 
 ## Prerequisites
 
@@ -114,7 +114,7 @@ Audiovis_1.0_Horizon/
 
 ## Technologies Used
 
-- **Frontend**: Three.js, Socket.io, dat.GUI, Stats.js, SortableJS
+- **Frontend**: Three.js, Socket.IO, dat.GUI, Stats.js, SortableJS
 - **Backend**: Node.js, Express
 - **Build Tools**: Grunt, Babel
 - **Audio Processing**: Python, LAME encoder
