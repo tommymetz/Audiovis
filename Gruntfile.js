@@ -1,4 +1,6 @@
 module.exports = function(grunt) {
+	const sass = require('sass');
+	
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
@@ -6,10 +8,11 @@ module.exports = function(grunt) {
 		//SASS//////////////////////////////////////////////
 		////////////////////////////////////////////////////
 		sass: {
+	    options: {
+	      implementation: sass,
+	      outputStyle: 'compressed'
+	    },
 	    dist: {
-	      options: {
-	        style: 'compact'
-	      },
 	      files: {
 	        'public/css/styles.min.css': 'public/css/scss/main.scss'
 	      }
@@ -25,7 +28,8 @@ module.exports = function(grunt) {
 	        THREE: true
 	      },
 				'-W083': true,
-				'browser': true
+				'browser': true,
+				'esversion': 6
 	    },
       all: [
         'Gruntfile.js',
@@ -104,7 +108,7 @@ module.exports = function(grunt) {
 	}); //END grunt.initConfig
 
 	//LOAD TASKS
-	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');

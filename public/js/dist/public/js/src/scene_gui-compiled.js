@@ -1,32 +1,33 @@
 "use strict";
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var SceneGui =
-/*#__PURE__*/
-function () {
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var SceneGui = /*#__PURE__*/function () {
   function SceneGui(parent) {
     _classCallCheck(this, SceneGui);
-
     var mythis = this;
     this.parent = parent;
     this.visible = false;
-    this.paused = false; //State
+    this.paused = false;
 
-    this.state = {}; //Gui Container
+    //State
+    this.state = {};
 
+    //Gui Container
     this.container = document.createElement('div');
     this.parent.container.appendChild(this.container);
-    this.container.setAttribute('class', 'scene-gui gui-container hidden'); //Menu Bar
+    this.container.setAttribute('class', 'scene-gui gui-container hidden');
 
+    //Menu Bar
     this.menu = document.createElement('div');
     this.container.appendChild(this.menu);
-    this.menu.setAttribute('class', 'gui-menu'); //Playlist Title
+    this.menu.setAttribute('class', 'gui-menu');
 
+    //Playlist Title
     /*this.title = document.createElement('div');
     this.menu.appendChild(this.title);
     this.title.setAttribute('class', 'gui-item gui-item_title hidden');
@@ -38,52 +39,57 @@ function () {
     this.status = document.createElement('div');
     this.menu.appendChild(this.status);
     this.status.setAttribute('class', 'gui-item gui-item_status');*/
-    //Stop Play
 
+    //Stop Play
     this.button_stopplay = document.createElement('a');
     this.menu.appendChild(this.button_stopplay);
     this.button_stopplay.setAttribute('class', 'gui-item');
     this.button_stopplay.setAttribute('href', '#');
-    this.button_stopplay.innerHTML = 'stop'; //Fast Forward
+    this.button_stopplay.innerHTML = 'stop';
 
+    //Fast Forward
     this.button_fastforward = document.createElement('a');
     this.menu.appendChild(this.button_fastforward);
     this.button_fastforward.setAttribute('class', 'gui-item');
     this.button_fastforward.setAttribute('href', '#');
-    this.button_fastforward.innerHTML = 'ff'; //Next Song
+    this.button_fastforward.innerHTML = 'ff';
 
+    //Next Song
     this.button_nextsong = document.createElement('a');
     this.menu.appendChild(this.button_nextsong);
     this.button_nextsong.setAttribute('class', 'gui-item');
     this.button_nextsong.setAttribute('href', '#');
-    this.button_nextsong.innerHTML = 'next'; //Buy
+    this.button_nextsong.innerHTML = 'next';
 
+    //Buy
     this.button_buy = document.createElement('a');
     this.menu.appendChild(this.button_buy);
     this.button_buy.setAttribute('class', 'gui-item');
     this.button_buy.setAttribute('href', 'http://multidim.net/releases/horizon');
     this.button_buy.setAttribute('target', '_blank');
-    this.button_buy.innerHTML = 'get'; //Stems - https://github.com/RubaXa/Sortable
+    this.button_buy.innerHTML = 'get';
 
+    //Stems - https://github.com/RubaXa/Sortable
     /*this.stems = [];
     this.stems_list = document.createElement('ul');
     this.container.appendChild(this.stems_list);
     this.stems_list.setAttribute('class', 'gui-list');*/
-    //Song Title
 
+    //Song Title
     this.song_title = document.createElement('div');
     this.container.appendChild(this.song_title);
     this.song_title.setAttribute('class', 'gui-song-title');
     this.song_title.innerHTML = 'Glissline - Horizon';
   }
-
-  _createClass(SceneGui, [{
+  return _createClass(SceneGui, [{
     key: "init",
     value: function init() {
       var mythis = this;
-      this.updateVisibility(true); //this.title.innerHTML = this.parent.playlist.name;
-      //Menu Buttons
+      this.updateVisibility(true);
 
+      //this.title.innerHTML = this.parent.playlist.name;
+
+      //Menu Buttons
       this.button_stopplay.addEventListener('click', function (e) {
         e.preventDefault();
         mythis.stopplay();
@@ -117,7 +123,6 @@ function () {
     key: "updateVisibility",
     value: function updateVisibility(visible) {
       this.visible = visible;
-
       if (visible) {
         this.container.classList.remove('hidden');
       } else {
@@ -134,7 +139,6 @@ function () {
         this.button_stopplay.innerHTML = 'play';
         this.paused = true;
       }
-
       this.parent.stopplay();
     }
   }, {
@@ -152,12 +156,14 @@ function () {
       this.paused = false;
       document.getElementById('playdiv').style.display = 'none';
       this.parent.nextsong();
-    } //loadState(){
+    }
+
+    //loadState(){
     //  console.log('load scene');
     //}
+
     //saveState(){
     //  console.log('save scene');
-
     /*var mythis = this;
     this.status.innerHTML = 'saving';
     var xhttp = new XMLHttpRequest();
@@ -172,9 +178,6 @@ function () {
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify(this.state));*/
     //}
-
   }]);
-
-  return SceneGui;
 }(); //
 //# sourceMappingURL=scene_gui-compiled.js.map

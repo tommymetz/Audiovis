@@ -1,19 +1,18 @@
 "use strict";
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 (function () {
   //Detect and start game
   window.onload = function () {
     if (Detector.webgl) {
-      var ua = navigator.userAgent; //console.log('ua', ua);
-
+      var ua = navigator.userAgent;
+      //console.log('ua', ua);
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
-
       if (is_ie) {
         document.getElementById('loading').innerHTML = 'Please use a different browser. This site works best in Chrome.';
       } else {
@@ -24,30 +23,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       console.log('webgl warning', warning);
       document.getElementById('loading').innerHTML = 'This browser does not support WebGL';
     }
-  }; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  };
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //GAME INIT////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-  var Scene =
-  /*#__PURE__*/
-  function () {
+  var Scene = /*#__PURE__*/function () {
     function Scene() {
       _classCallCheck(this, Scene);
+      var mythis = this;
 
-      var mythis = this; //Backend connection
-
+      //Backend connection
       /*this.socket = io.connect('http://localhost:3000');*/
-
-      this.export = false; //Not really working
-
+      this["export"] = false; //Not really working
       this.stop_on_next = false;
-      this.hide_controls = true; //Scene variables
+      this.hide_controls = true;
 
+      //Scene variables
       this.container = document.getElementById('container');
       this.loadingdiv = document.getElementById('loading');
       this.playdiv = document.getElementById('playdiv');
@@ -62,8 +58,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.container.appendChild(this.renderer.domElement);
       this.audiolistener = new THREE.AudioListener();
-      this.camera.add(this.audiolistener); //Variables
+      this.camera.add(this.audiolistener);
 
+      //Variables
       this.app_preloaded = false;
       this.fps = 24;
       this.animationstart = 0;
@@ -73,17 +70,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.delta;
       this.frame = 0;
       this.currentsong = 0;
-      this.gui = new SceneGui(this); //if(this.hide_controls) this.gui.updateVisibility(false);
-      //Stats
+      this.gui = new SceneGui(this);
+      //if(this.hide_controls) this.gui.updateVisibility(false);
 
+      //Stats
       this.stats = new Stats();
       this.stats.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
-
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.bottom = '0px';
       this.stats.domElement.style.zIndex = 100;
-      if (!this.hide_controls) this.container.appendChild(this.stats.domElement); //Controls
+      if (!this.hide_controls) this.container.appendChild(this.stats.domElement);
 
+      //Controls
       document.getElementById('game-stop').addEventListener('click', function (e) {
         e.preventDefault();
         mythis.stopplay();
@@ -91,61 +89,62 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       document.getElementById('playdiv-begin').addEventListener('click', function (e) {
         e.preventDefault();
         mythis.playdiv.style.display = 'none';
-
         if (!mythis.app_preloaded) {
           mythis.preloaded();
         } else {
           mythis.stopplay();
           mythis.gui.updateStopPlayButtonState(false);
         }
-      }); //Initialize
+      });
 
+      //Initialize
       this.initScene();
     }
-
-    _createClass(Scene, [{
+    return _createClass(Scene, [{
       key: "initScene",
       value: function initScene(stage) {
-        var mythis = this; ////////////////////////////////////////////////////////////////////////////
+        var mythis = this;
+
+        ////////////////////////////////////////////////////////////////////////////
         //SCENE/////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
+
         // CONTROLS
+        this.orbitcontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
-        this.orbitcontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement); //Camera
-
+        //Camera
         this.camera.position.set(0, -10, 22); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
-
         this.camera.lookAt(this.cameralookat);
         window.addEventListener('resize', onWindowResize, false);
-
         function onWindowResize() {
           mythis.camera.aspect = window.innerWidth / window.innerHeight;
           mythis.camera.updateProjectionMatrix();
           mythis.renderer.setSize(window.innerWidth, window.innerHeight);
-        } //LIGHT
+        }
 
+        //LIGHT
         /*var light = new THREE.PointLight( 0xffffff, 1);
         light.position.set(0, 1, 3);
         this.scene.add( light );
         var pointLightHelper = new THREE.PointLightHelper(light, 0.1);
         this.scene.add( pointLightHelper );*/
+
         //LIGHT
-
-
         var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         directionalLight.rotation.set(0, 0, 0);
         directionalLight.position.set(0, 0, 5);
-        this.scene.add(directionalLight); //var helper = new THREE.DirectionalLightHelper( directionalLight, 1 );
+        this.scene.add(directionalLight);
+        //var helper = new THREE.DirectionalLightHelper( directionalLight, 1 );
         //this.scene.add( helper );
-        //Sky Fog
 
+        //Sky Fog
         /*const skyBoxGeometry = new THREE.CubeGeometry( 20, 20, 20);
         const skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, side: THREE.BackSide } );
         const skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
         skyBox.name = 'skybox';
         this.scene.add(skyBox);*/
-        //Floor
 
+        //Floor
         var geometry = new THREE.PlaneGeometry(2, 4);
         var material = new THREE.MeshStandardMaterial({
           color: 0xffffff,
@@ -156,38 +155,40 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this.floor = new THREE.Mesh(geometry, material);
         this.floor.position.set(0, 0, 0);
         this.floor.rotation.set(Math.PI / 2, 0, 0);
-        this.scene.add(this.floor); ////////////////////////////////////////////////////////////////////////////
+        this.scene.add(this.floor);
+
+        ////////////////////////////////////////////////////////////////////////////
         //PLAYLIST//////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
+
         //Load playlist json
-
         this.loadJSON('content/_playlist.json', function (response) {
-          mythis.playlist = JSON.parse(response); //console.log('playlist', mythis.playlist);
+          mythis.playlist = JSON.parse(response);
+          //console.log('playlist', mythis.playlist);
+
           //Songs
-
           mythis.songs = [];
-          var location = ''; //Foreach Song, load hidden
+          var location = '';
 
+          //Foreach Song, load hidden
           var songcount = mythis.playlist.songs.length;
-          var songi = 0; //songcount = 1;
-
+          var songi = 0;
+          //songcount = 1;
           for (var i = 0; i < songcount; i++) {
             location = 'content/' + mythis.playlist.songs[i] + '/';
             mythis.songs[i] = new Song(mythis, location, '_analysis_files.json', '_config.json', mythis.scene, mythis.audiolistener, mythis.fps, mythis.hide_controls);
-
             mythis.songs[i].onLoaded = function () {
               //console.log(mythis.songs[i]);
               songi++;
-              mythis.loadingdiv.innerHTML = '<img src="img/loading-icon.gif" width="30" /><br>Loading Interactive Experience<br>Song ' + songi + ' of ' + songcount + ' loaded'; //Detect when all loaded
+              mythis.loadingdiv.innerHTML = '<img src="img/loading-icon.gif" width="30" /><br>Loading Interactive Experience<br>Song ' + songi + ' of ' + songcount + ' loaded';
 
+              //Detect when all loaded
               var loaded = true;
-
               for (var j = 0; j < songcount; j++) {
                 if (!mythis.songs[j].loaded) {
                   loaded = false;
                 }
               }
-
               if (loaded) {
                 mythis.loadingdiv.style.visibility = 'hidden';
                 mythis.playdiv.style.display = 'block';
@@ -208,10 +209,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           mythis.initAnimate();
           mythis.play(mythis.currentsong);
         }, 1000);
-      } //////////////////////////////////////////////////////////////////////////////
+      }
+
+      //////////////////////////////////////////////////////////////////////////////
       //PLAYBACK////////////////////////////////////////////////////////////////////
       //////////////////////////////////////////////////////////////////////////////
-
     }, {
       key: "play",
       value: function play(which) {
@@ -224,7 +226,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       key: "stopplay",
       value: function stopplay() {
         var mythis = this;
-
         if (this.paused) {
           this.songs[this.currentsong].play();
           this.playdiv.style.display = 'none';
@@ -248,7 +249,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       key: "nextsong",
       value: function nextsong() {
         this.paused = false;
-
         if (this.stop_on_next) {
           this.stopplay();
         } else {
@@ -260,14 +260,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             mythis.play();
           }, 0);
         }
-      } ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      }
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //ANIMATE//////////////////////////////////////////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     }, {
       key: "initAnimate",
       value: function initAnimate() {
@@ -283,25 +284,25 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }, {
       key: "animate",
       value: function animate() {
-        var mythis = this; //if(!this.paused){ requestAnimationFrame(() => { mythis.animate(); }); };
-
+        var mythis = this;
+        //if(!this.paused){ requestAnimationFrame(() => { mythis.animate(); }); };
         requestAnimationFrame(function () {
           mythis.animate();
-        }); //Frame quantization
+        });
 
+        //Frame quantization
         this.now = Date.now();
         this.delta = this.now - this.then;
-
         if (this.delta > this.interval) {
           //Update scene
-          this.updateScene(); //Turnaround
+          this.updateScene();
 
+          //Turnaround
           this.then = this.now - this.delta % this.interval;
           this.renderer.render(this.scene, this.camera);
-
-          if (this.export) {//this.socket.emit('render-frame', {frame: mythis.frame, file: document.querySelector('canvas').toDataURL()});
+          if (this["export"]) {
+            //this.socket.emit('render-frame', {frame: mythis.frame, file: document.querySelector('canvas').toDataURL()});
           }
-
           this.stats.update();
           this.frame = Math.round((this.now - this.animationstart) / 41.666666666); //1000ms / 24fps = 41.666666666
         }
@@ -318,18 +319,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         var xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
         xobj.open('GET', file, true);
-
         xobj.onreadystatechange = function () {
           if (xobj.readyState == 4 && xobj.status == "200") {
             callback(xobj.responseText);
           }
         };
-
         xobj.send(null);
       }
     }]);
-
-    return Scene;
   }();
-})(); //
+})();
+
+//
 //# sourceMappingURL=scene-compiled.js.map
