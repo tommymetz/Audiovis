@@ -1,6 +1,24 @@
 "use strict";
 
-var colorsWarmCold = ['#FFFFFF', '#6F256F', '#530E53', '#9D344B', '#761429', '#482E74', '#2D1557', '#8A458A', '#C56277'];
+var colorsWarmCold = ['#FFFFFF', '#6F256F', '#530E53', '#9D344B', '#761429', '#482E74', '#2D1557', '#8A458A', '#C56277'
+
+/*0x6F256F,
+0x530E53,
+0x9D344B,
+0x761429,
+0x482E74,
+0x2D1557,
+0x8A458A,
+0xC56277,
+ 0x6F256F,
+0x530E53,
+0x9D344B,
+0x761429,
+0x482E74,
+0x2D1557,
+0x8A458A,
+0xC56277*/];
+
 /*this.colors = [
   0x6F256F,
   0x530E53,
@@ -19,7 +37,6 @@ var colorsWarmCold = ['#FFFFFF', '#6F256F', '#530E53', '#9D344B', '#761429', '#4
   0x8A458A,
   0xC56277
 ];*/
-
 /*this.colors = [
   Math.random() * 0xffffff,
   Math.random() * 0xffffff,
