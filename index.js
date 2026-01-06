@@ -1,7 +1,7 @@
 const express = require('express');
 var app = require('express')(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server),
+    io = require('socket.io')(server),
     fs = require('fs'),
     bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended : true}));
@@ -25,10 +25,10 @@ app.post('/config/save', function (req, res) {
   });
 });
 
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
   socket.on('render-frame', function (data) {
     data.file = data.file.split(',')[1]; // Get rid of the data:image/png;base64 at the beginning of the file data
-    var buffer = new Buffer(data.file, 'base64');
+    var buffer = Buffer.from(data.file, 'base64');
     fs.writeFile(__dirname + '/public/tmp/frame-' + data.frame + '.png', buffer.toString('binary'), 'binary', (error) => {
       //console.log('error');
     });
