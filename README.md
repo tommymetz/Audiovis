@@ -1,5 +1,8 @@
 # Audiovis 1.0 - Horizon
 
+> **⚠️ WARNING: Legacy Code**  
+> This is old legacy code that needs to be refactored. The codebase may not follow modern best practices and could benefit from significant improvements to structure, dependencies, and implementation patterns.
+
 An interactive 3D audio visualization experience by [Glissline](http://multidim.net), featuring immersive visual representations synchronized with music.
 
 🔗 **Live Demo:** [horizon.glissline.com](https://horizon.glissline.com)
