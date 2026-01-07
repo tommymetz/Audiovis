@@ -25,7 +25,7 @@ app.post('/config/save', function (req, res) {
   });
 });
 
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
   socket.on('render-frame', function (data) {
     data.file = data.file.split(',')[1]; // Get rid of the data:image/png;base64 at the beginning of the file data
     var buffer = Buffer.from(data.file, 'base64');
