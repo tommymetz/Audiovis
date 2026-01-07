@@ -12,8 +12,7 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] Update dependencies with known security vulnerabilities or critical patches (reduced from 4 to 1, only three.js remains)
   - [x] Update dependencies that are 2+ major versions behind latest stable (all updated except express 5.x and three.js)
 - [ ] **Update Three.js** from v0.89.0 to latest (v0.160+)
-  - [ ] Update Three.js imports and API usage
-  - [ ] Replace deprecated OrbitControls import
+  - [ ] Update Three.js imports and API usage (including OrbitControls import path change)
   - [x] Update Detector.js usage (now built-in)
 - [x] **Improve .gitignore**
   - [x] Add Python .pyc files and __pycache__ directories
