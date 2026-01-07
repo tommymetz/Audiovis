@@ -3,3 +3,20 @@ _trash
 node_modules
 .sass-cache
 AudioTestFile Project/AudioTestFile.wav
+
+# Build output
+public/js/dist/
+public/css/styles.min.css
+
+# Python
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
