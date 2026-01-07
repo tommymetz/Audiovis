@@ -9,17 +9,17 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] Upgrade Socket.IO from v2.1.1 to v4.x (multiple security advisories) - Now at v4.8.3
   - [x] Update Express to v4.x latest (security patches) - Now at v4.22.1
   - [x] Replace deprecated `new Buffer()` with `Buffer.from()` in `index.js` - Already using Buffer.from()
-  - [ ] Update dependencies with known security vulnerabilities or critical patches (4 vulnerabilities remain)
-  - [ ] Update dependencies that are 2+ major versions behind latest stable
+  - [x] Update dependencies with known security vulnerabilities or critical patches (reduced from 4 to 1, only three.js remains)
+  - [x] Update dependencies that are 2+ major versions behind latest stable (all updated except express 5.x and three.js)
 - [ ] **Update Three.js** from v0.89.0 to latest (v0.160+)
   - [ ] Update Three.js imports and API usage
   - [ ] Replace deprecated OrbitControls import
   - [ ] Update Detector.js usage (now built-in)
-- [ ] **Improve .gitignore**
-  - [ ] Add Python .pyc files and __pycache__ directories
-  - [ ] Add build output directories (dist, public/js/dist)
-  - [ ] Add IDE-specific files (.vscode, .idea)
-  - [ ] Add OS-specific files (.DS_Store handled, add Thumbs.db)
+- [x] **Improve .gitignore**
+  - [x] Add Python .pyc files and __pycache__ directories
+  - [x] Add build output directories (dist, public/js/dist)
+  - [x] Add IDE-specific files (.vscode, .idea)
+  - [x] Add OS-specific files (.DS_Store handled, add Thumbs.db)
 
 ### Phase 2: Modern Build System Migration
 - [ ] **Migrate from Grunt to Vite**
