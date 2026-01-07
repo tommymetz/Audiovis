@@ -129,6 +129,11 @@ class Spectrum {
     const factor = 100000;
     const vqi = this.stem.centroid_indexes[this.stem.frame];
 
+    // Guard against undefined or out-of-bounds centroids
+    if (!this.stem.centroids || vqi === undefined || vqi === null || !this.stem.centroids[vqi]) {
+      return;
+    }
+
     //Create two columns of positions
     const positions = this.spectrum.geometry.attributes.position.array;
     const positionlength = positions.length/3;

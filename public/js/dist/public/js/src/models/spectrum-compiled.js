@@ -151,6 +151,11 @@ var Spectrum = /*#__PURE__*/function () {
       var factor = 100000;
       var vqi = this.stem.centroid_indexes[this.stem.frame];
 
+      // Guard against undefined or out-of-bounds centroids
+      if (!this.stem.centroids || vqi === undefined || vqi === null || !this.stem.centroids[vqi]) {
+        return;
+      }
+
       //Create two columns of positions
       var positions = this.spectrum.geometry.attributes.position.array;
       var positionlength = positions.length / 3;
