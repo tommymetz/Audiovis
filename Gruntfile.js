@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 		sass: {
 	    options: {
 	      implementation: sass,
-	      style: 'compressed'
+	      style: 'compressed'  // Modern Sass API uses 'style' instead of deprecated 'outputStyle'
 	    },
 	    dist: {
 	      files: {
