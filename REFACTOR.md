@@ -11,9 +11,9 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] Replace deprecated `new Buffer()` with `Buffer.from()` in `index.js` - Already using Buffer.from()
   - [x] Update dependencies with known security vulnerabilities or critical patches (reduced from 4 to 1, only three.js remains)
   - [x] Update dependencies that are 2+ major versions behind latest stable (all updated except express 5.x and three.js)
-- [ ] **Update Three.js** from v0.89.0 to latest (v0.160+)
-  - [ ] Update Three.js imports and API usage
-  - [ ] Replace deprecated OrbitControls import
+- [x] **Update Three.js** from v0.89.0 to v0.145.0 (last version with UMD build)
+  - [x] Update Three.js imports and API usage
+  - [x] Replace deprecated OrbitControls import (path unchanged in v0.145.0)
   - [x] Update Detector.js usage (now built-in)
 - [x] **Improve .gitignore**
   - [x] Add Python .pyc files and __pycache__ directories
