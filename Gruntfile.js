@@ -49,7 +49,12 @@ module.exports = function(grunt) {
 						sourceMapName : 'public/js/app.min.map'
 					},
 					src : [
-						'public/js/dist/public/js/src/*-compiled.js',
+						'public/js/dist/public/js/src/webgl-detector-compiled.js',
+						'public/js/dist/public/js/src/scene-compiled.js',
+						'public/js/dist/public/js/src/scene_gui-compiled.js',
+						'public/js/dist/public/js/src/song-compiled.js',
+						'public/js/dist/public/js/src/song_gui-compiled.js',
+						'public/js/dist/public/js/src/stem-compiled.js',
 						'public/js/dist/public/js/src/models/*-compiled.js',
 						'public/js/dist/public/js/src/colors/*-compiled.js'
 					],
@@ -61,9 +66,8 @@ module.exports = function(grunt) {
 						sourceMapName : 'public/js/dep.min.map'
 					},
 					src : [
-						'node_modules/three/build/three.js',
-						'node_modules/three/examples/js/Detector.js',
-						'node_modules/three/examples/js/controls/OrbitControls.js',
+						'public/js/three-bundle.js',
+						'public/js/orbit-controls-bundle.js',
 						'node_modules/stats.js/build/stats.min.js',
 						'node_modules/dat.gui/build/dat.gui.min.js',
 						'node_modules/sortablejs/Sortable.min.js'

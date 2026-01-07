@@ -16,8 +16,8 @@ class Triangles {
     const geometry = new THREE.BufferGeometry();
     var positions = new Float32Array(MAX_POINTS * 3);
     const normals = new Float32Array(MAX_POINTS * 3);
-    geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3));
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
     const material = new THREE.MeshBasicMaterial({color: this.color, side: THREE.DoubleSide, wireframe:false});
     this.triangles = new THREE.Mesh(geometry, material);
     this.triangles.position.x = 0;

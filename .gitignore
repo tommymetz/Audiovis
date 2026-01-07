@@ -7,6 +7,12 @@ AudioTestFile Project/AudioTestFile.wav
 # Build output
 public/js/dist/
 public/css/styles.min.css
+public/js/three-bundle.js
+public/js/orbit-controls-bundle.js
+public/js/app.min.js
+public/js/app.min.map
+public/js/dep.min.js
+public/js/dep.min.map
 
 # Python
 *.pyc

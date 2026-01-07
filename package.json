@@ -13,19 +13,23 @@
     "socket.io": "^4.8.3",
     "sortablejs": "^1.15.6",
     "stats.js": "^0.17.0",
-    "three": "^0.89.0"
+    "three": "^0.182.0"
   },
   "scripts": {
     "playlist": "python processor/playlist.py",
     "analysis": "python processor/main.py",
-    "build": "grunt",
-    "build-dep": "grunt dep",
+    "build": "npm run build-three && npm run build-orbit-controls && grunt",
+    "build-three": "npx rollup -c rollup-three.config.js",
+    "build-orbit-controls": "npx rollup -c rollup.config.js",
+    "build-dep": "npm run build-three && npm run build-orbit-controls && grunt dep",
     "start": "node index.js"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
-    "grunt-babel": "^8.0.0"
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "grunt-babel": "^8.0.0",
+    "rollup": "^4.55.1"
   },
   "overrides": {
     "debug": ">=4.3.1"
