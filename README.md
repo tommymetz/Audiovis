@@ -1,4 +1,4 @@
-# Audiovis 1.0 - Horizon
+# Audiovis
 
 > **⚠️ WARNING: Legacy Code**  
 > This is old legacy code that needs to be refactored. The codebase may not follow modern best practices and could benefit from significant improvements to structure, dependencies, and implementation patterns.
