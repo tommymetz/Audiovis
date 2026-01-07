@@ -2,18 +2,16 @@
   "name": "audiovis",
   "version": "1.0.0",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "dat.gui": "^0.7.9",
-    "express": "^4.16.4",
-    "grunt": "^1.0.3",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-uglify": "^3.4.0",
+    "express": "^4.22.1",
+    "grunt": "^1.6.1",
+    "grunt-contrib-jshint": "^3.2.0",
+    "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-sass": "^3.1.0",
-    "node-osc": "^2.1.0",
-    "sass": "^1.57.0",
-    "socket.io": "^4.8.0",
-    "sortablejs": "^1.7.0",
+    "grunt-sass": "^4.0.1",
+    "sass": "^1.97.2",
+    "socket.io": "^4.8.3",
+    "sortablejs": "^1.15.6",
     "stats.js": "^0.17.0",
     "three": "^0.89.0"
   },
@@ -25,8 +23,8 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
     "grunt-babel": "^8.0.0"
   },
   "overrides": {

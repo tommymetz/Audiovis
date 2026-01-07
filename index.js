@@ -2,10 +2,9 @@ const express = require('express');
 var app = require('express')(),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
-    fs = require('fs'),
-    bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended : true}));
-app.use(bodyParser.json());
+    fs = require('fs');
+app.use(express.urlencoded({extended : true}));
+app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 server.listen(3000);
 console.log('http://localhost:3000');
