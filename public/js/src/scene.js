@@ -1,8 +1,18 @@
 (() => {
 
+  // WebGL detection function (replaces deprecated Detector.js)
+  function isWebGLAvailable() {
+    try {
+      const canvas = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch (e) {
+      return false;
+    }
+  }
+
   //Detect and start game
   window.onload = () => {
-    if(Detector.webgl){
+    if(isWebGLAvailable()){
       var ua = navigator.userAgent;
       //console.log('ua', ua);
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
@@ -12,8 +22,7 @@
         const theScene = new Scene();
       }
     }else{
-      const warning = Detector.getWebGLErrorMessage();
-      console.log('webgl warning', warning);
+      console.log('WebGL is not available in this browser');
       document.getElementById('loading').innerHTML = 'This browser does not support WebGL';
     }
   }

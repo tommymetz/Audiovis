@@ -7,9 +7,19 @@ function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), 
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 (function () {
+  // WebGL detection function (replaces deprecated Detector.js)
+  function isWebGLAvailable() {
+    try {
+      var canvas = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch (e) {
+      return false;
+    }
+  }
+
   //Detect and start game
   window.onload = function () {
-    if (Detector.webgl) {
+    if (isWebGLAvailable()) {
       var ua = navigator.userAgent;
       //console.log('ua', ua);
       var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
@@ -19,8 +29,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         var theScene = new Scene();
       }
     } else {
-      var warning = Detector.getWebGLErrorMessage();
-      console.log('webgl warning', warning);
+      console.log('WebGL is not available in this browser');
       document.getElementById('loading').innerHTML = 'This browser does not support WebGL';
     }
   };
