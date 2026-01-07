@@ -17,8 +17,8 @@ This is an interactive 3D audio visualization application built by [Glissline](h
 - **Vanilla JavaScript (ES6)** - Application logic
 
 ### Backend
-- **Node.js** with Express (v4.16.4) - Web server
-- **Socket.IO** (v2.1.1) - WebSocket server
+- **Node.js** with Express (v4.22.1) - Web server
+- **Socket.IO** (v4.8.3) - WebSocket server
 - **Python** - Audio analysis and processing
 
 ### Build Tools
@@ -103,10 +103,8 @@ Audiovis_1.0_Horizon/
 ## Known Issues & Technical Debt
 
 ### Security & Deprecation Issues
-- **Deprecated Buffer Constructor**: `index.js` uses deprecated `new Buffer()` constructor
-- **Old Node.js Dependencies**: Several packages have security vulnerabilities
+- **Old Node.js Dependencies**: Several packages have security vulnerabilities (4 vulnerabilities remain)
 - **Outdated Three.js**: v0.89.0 (2017) - many versions behind current
-- **Socket.IO v2**: Multiple security advisories, should upgrade to v4+
 
 ### Code Quality
 - **ES6 Classes Mixed with ES5 Patterns**: Inconsistent JavaScript patterns

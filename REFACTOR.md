@@ -5,11 +5,11 @@ This document outlines the modernization roadmap and future development plans fo
 ## Modernization Roadmap
 
 ### Phase 1: Essential Security & Maintenance
-- [ ] **Update Node.js dependencies** to address security vulnerabilities
-  - [ ] Upgrade Socket.IO from v2.1.1 to v4.x (multiple security advisories)
-  - [ ] Update Express to v4.x latest (security patches)
-  - [ ] Replace deprecated `new Buffer()` with `Buffer.from()` in `index.js`
-  - [ ] Update dependencies with known security vulnerabilities or critical patches
+- [x] **Update Node.js dependencies** to address security vulnerabilities
+  - [x] Upgrade Socket.IO from v2.1.1 to v4.x (multiple security advisories) - Now at v4.8.3
+  - [x] Update Express to v4.x latest (security patches) - Now at v4.22.1
+  - [x] Replace deprecated `new Buffer()` with `Buffer.from()` in `index.js` - Already using Buffer.from()
+  - [ ] Update dependencies with known security vulnerabilities or critical patches (4 vulnerabilities remain)
   - [ ] Update dependencies that are 2+ major versions behind latest stable
 - [ ] **Update Three.js** from v0.89.0 to latest (v0.160+)
   - [ ] Update Three.js imports and API usage
