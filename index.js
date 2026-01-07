@@ -1,8 +1,9 @@
 const express = require('express');
-var app = require('express')(),
-    server = require('http').createServer(app),
-    io = require('socket.io')(server),
-    fs = require('fs');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const fs = require('fs');
+
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
@@ -17,8 +18,7 @@ app.post('/config/save', function (req, res) {
   //_config.json
   //console.log(req.body);
 
-  var json = JSON.stringify(req.body);
-  var fs = require('fs');
+  const json = JSON.stringify(req.body);
   fs.writeFile(__dirname + '/public/' + req.body.location + '_config.json', json, 'utf8', (error) => {
     res.json(req.body);
   });
