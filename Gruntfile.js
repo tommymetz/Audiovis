@@ -49,9 +49,10 @@ module.exports = function(grunt) {
 						sourceMapName : 'public/js/app.min.map'
 					},
 					src : [
-						'public/js/dist/public/js/src/*-compiled.js',
 						'public/js/dist/public/js/src/models/*-compiled.js',
-						'public/js/dist/public/js/src/colors/*-compiled.js'
+						'public/js/dist/public/js/src/colors/*-compiled.js',
+						'public/js/dist/public/js/src/*-compiled.js',
+						'!public/js/dist/public/js/src/*-wrapper-compiled.js'
 					],
 					dest : 'public/js/app.min.js'
 				},
