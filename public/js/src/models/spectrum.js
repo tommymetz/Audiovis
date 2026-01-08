@@ -10,13 +10,17 @@ class Spectrum {
 
   initSpectrum() {
     //Spectrum Shape
+    // Guard against undefined centroids (happens when allquietsamples is true)
+    if (!this.stem.centroids || !this.stem.centroids[0]) {
+      return;
+    }
     const CENTROID_LENGTH = this.stem.centroids[0].length;
     const MAX_POINTS = CENTROID_LENGTH * 2;
     const geometry = new THREE.BufferGeometry();
     var positions = new Float32Array(MAX_POINTS * 3);
     var normals = new Float32Array(MAX_POINTS * 3);
-    geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3));
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
     const material = new THREE.MeshBasicMaterial({color: this.color, wireframe:false, side: THREE.DoubleSide, transparent:true, opacity: 0.75}); //side: THREE.DoubleSide,
     this.spectrum = new THREE.Mesh(geometry, material);
     this.spectrum.position.x = 0;
@@ -125,9 +129,24 @@ class Spectrum {
   }
 
   updateSpectrum() {
+    // Guard against undefined objects (happens when allquietsamples is true)
+    if (!this.spectrum || !this.stem.centroids || !this.stem.centroid_indexes) {
+      return;
+    }
     const multiplyer = this.stem.json.track.byte_num_range; //255, 65535
     const factor = 100000;
+    
+    // Guard against NaN or invalid frame
+    if (isNaN(this.stem.frame) || this.stem.frame < 0 || this.stem.frame >= this.stem.centroid_indexes.length) {
+      return;
+    }
+    
     const vqi = this.stem.centroid_indexes[this.stem.frame];
+    
+    // Guard against invalid vqi (undefined or out of bounds)
+    if (vqi === undefined || !this.stem.centroids[vqi]) {
+      return;
+    }
 
     //Create two columns of positions
     const positions = this.spectrum.geometry.attributes.position.array;
@@ -221,6 +240,10 @@ class Spectrum {
   }
 
   updateColor(color){
+    // Guard against undefined objects (happens when allquietsamples is true)
+    if (!this.spectrum || !this.spectrummirror) {
+      return;
+    }
     this.spectrum.material.color.set(color);
     this.spectrummirror.material.color.set(color);
   }

@@ -19,13 +19,17 @@ var Spectrum = /*#__PURE__*/function () {
     key: "initSpectrum",
     value: function initSpectrum() {
       //Spectrum Shape
+      // Guard against undefined centroids (happens when allquietsamples is true)
+      if (!this.stem.centroids || !this.stem.centroids[0]) {
+        return;
+      }
       var CENTROID_LENGTH = this.stem.centroids[0].length;
       var MAX_POINTS = CENTROID_LENGTH * 2;
       var geometry = new THREE.BufferGeometry();
       var positions = new Float32Array(MAX_POINTS * 3);
       var normals = new Float32Array(MAX_POINTS * 3);
-      geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3));
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
       var material = new THREE.MeshBasicMaterial({
         color: this.color,
         wireframe: false,
@@ -147,9 +151,23 @@ var Spectrum = /*#__PURE__*/function () {
   }, {
     key: "updateSpectrum",
     value: function updateSpectrum() {
+      // Guard against undefined objects (happens when allquietsamples is true)
+      if (!this.spectrum || !this.stem.centroids || !this.stem.centroid_indexes) {
+        return;
+      }
       var multiplyer = this.stem.json.track.byte_num_range; //255, 65535
       var factor = 100000;
+
+      // Guard against NaN or invalid frame
+      if (isNaN(this.stem.frame) || this.stem.frame < 0 || this.stem.frame >= this.stem.centroid_indexes.length) {
+        return;
+      }
       var vqi = this.stem.centroid_indexes[this.stem.frame];
+
+      // Guard against invalid vqi (undefined or out of bounds)
+      if (vqi === undefined || !this.stem.centroids[vqi]) {
+        return;
+      }
 
       //Create two columns of positions
       var positions = this.spectrum.geometry.attributes.position.array;
@@ -251,6 +269,10 @@ var Spectrum = /*#__PURE__*/function () {
   }, {
     key: "updateColor",
     value: function updateColor(color) {
+      // Guard against undefined objects (happens when allquietsamples is true)
+      if (!this.spectrum || !this.spectrummirror) {
+        return;
+      }
       this.spectrum.material.color.set(color);
       this.spectrummirror.material.color.set(color);
     }
