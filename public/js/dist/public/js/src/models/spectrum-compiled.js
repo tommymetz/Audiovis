@@ -153,7 +153,6 @@ var Spectrum = /*#__PURE__*/function () {
     value: function updateSpectrum() {
       // Guard against undefined objects (happens when allquietsamples is true)
       if (!this.spectrum || !this.stem.centroids || !this.stem.centroid_indexes) {
-        console.warn('Spectrum update skipped due to undefined centroids or centroid indexes.');
         return;
       }
       var multiplyer = this.stem.json.track.byte_num_range; //255, 65535

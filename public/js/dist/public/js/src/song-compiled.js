@@ -224,7 +224,6 @@ var Song = /*#__PURE__*/function () {
     value: function updateAnimation() {
       if (this.visible) {
         var audioframe = (this.audiotrack.context.currentTime - this.starttime) * this.fps;
-        console.log(this.audiotrack.context.currentTime, this.starttime, this.fps, audioframe);
         this.frame = Math.round(audioframe + this.offsetframes); //1000ms / 24fps = 41.666666666
 
         // Guard against NaN frame values
