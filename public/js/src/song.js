@@ -175,7 +175,8 @@ class Song {
     if(this.audiotrack.isPlaying) this.audiotrack.stop();
     this.audiotrack.offset = this.offset;
     this.audiotrack.play();
-    this.starttime = this.audiotrack.startTime;
+    // Capture the audio context time when play is called
+    this.starttime = this.audiotrack.context.currentTime;
     this.updateVisibility(true);
   }
 
@@ -204,6 +205,12 @@ class Song {
     if(this.visible){
       var audioframe = (this.audiotrack.context.currentTime - this.starttime) * this.fps;
       this.frame = Math.round(audioframe + this.offsetframes); //1000ms / 24fps = 41.666666666
+      
+      // Guard against NaN frame values
+      if (isNaN(this.frame) || this.frame < 0) {
+        return;
+      }
+      
       for(let i=0; i<this.stems.length; i++){
         this.stems[i].updateAnimation(this.frame);
       }

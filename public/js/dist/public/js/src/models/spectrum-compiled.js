@@ -153,11 +153,22 @@ var Spectrum = /*#__PURE__*/function () {
     value: function updateSpectrum() {
       // Guard against undefined objects (happens when allquietsamples is true)
       if (!this.spectrum || !this.stem.centroids || !this.stem.centroid_indexes) {
+        console.warn('Spectrum update skipped due to undefined centroids or centroid indexes.');
         return;
       }
       var multiplyer = this.stem.json.track.byte_num_range; //255, 65535
       var factor = 100000;
+
+      // Guard against NaN or invalid frame
+      if (isNaN(this.stem.frame) || this.stem.frame < 0 || this.stem.frame >= this.stem.centroid_indexes.length) {
+        return;
+      }
       var vqi = this.stem.centroid_indexes[this.stem.frame];
+
+      // Guard against invalid vqi (undefined or out of bounds)
+      if (vqi === undefined || !this.stem.centroids[vqi]) {
+        return;
+      }
 
       //Create two columns of positions
       var positions = this.spectrum.geometry.attributes.position.array;

@@ -135,7 +135,18 @@ class Spectrum {
     }
     const multiplyer = this.stem.json.track.byte_num_range; //255, 65535
     const factor = 100000;
+    
+    // Guard against NaN or invalid frame
+    if (isNaN(this.stem.frame) || this.stem.frame < 0 || this.stem.frame >= this.stem.centroid_indexes.length) {
+      return;
+    }
+    
     const vqi = this.stem.centroid_indexes[this.stem.frame];
+    
+    // Guard against invalid vqi (undefined or out of bounds)
+    if (vqi === undefined || !this.stem.centroids[vqi]) {
+      return;
+    }
 
     //Create two columns of positions
     const positions = this.spectrum.geometry.attributes.position.array;
