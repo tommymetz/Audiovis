@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import fs from 'fs';
 
 export default defineConfig({
   root: 'public',
@@ -25,4 +26,20 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
+  // Plugin to serve package.json in dev mode
+  plugins: [
+    {
+      name: 'serve-package-json',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/package.json') {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(fs.readFileSync(resolve(__dirname, 'package.json')));
+          } else {
+            next();
+          }
+        });
+      },
+    },
+  ],
 });

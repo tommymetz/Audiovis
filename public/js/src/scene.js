@@ -48,6 +48,26 @@ export class Scene {
       this.stop_on_next = false;
       this.hide_controls = true;
 
+      // Fetch app info to determine environment and version
+      this.fetchAppInfo().then(appInfo => {
+        if (appInfo) {
+          // Update version display
+          const versionElement = document.getElementById('version');
+          if (versionElement) {
+            versionElement.textContent = `v${appInfo.version}`;
+          }
+          
+          // If running in production mode (via Express server), show controls
+          if (appInfo.productionMode) {
+            mythis.hide_controls = false;
+          }
+        }
+      }).catch(() => {
+        // If fetch fails, we're in dev mode (Vite), use default hide_controls = true
+        // Try to read version from package.json for dev mode
+        mythis.setDevModeVersion();
+      });
+
       //Scene variables
       this.container = document.getElementById('container');
       this.loadingdiv = document.getElementById('loading');
@@ -309,5 +329,36 @@ export class Scene {
         if(xobj.readyState == 4 && xobj.status == "200") {callback(xobj.responseText);}
       };
       xobj.send(null);
+    }
+
+    async fetchAppInfo() {
+      try {
+        const response = await fetch('/api/app-info');
+        if (response.ok) {
+          return await response.json();
+        }
+        return null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    setDevModeVersion() {
+      // In dev mode, fetch package.json to get version
+      fetch('/package.json')
+        .then(response => response.json())
+        .then(pkg => {
+          const versionElement = document.getElementById('version');
+          if (versionElement) {
+            versionElement.textContent = `v${pkg.version}`;
+          }
+        })
+        .catch(() => {
+          // Fallback if package.json is not accessible
+          const versionElement = document.getElementById('version');
+          if (versionElement) {
+            versionElement.textContent = 'v1.0.3';
+          }
+        });
     }
   }

@@ -4,6 +4,10 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const fs = require('fs');
 
+// Read package.json for version
+const packageJson = JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8'));
+const APP_VERSION = packageJson.version;
+
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 // Serve from dist in production, or public as fallback
@@ -12,6 +16,14 @@ app.use(express.static(__dirname + staticDir));
 server.listen(3001);
 console.log('Express server running on http://localhost:3001');
 console.log('For development, use: npm run dev (Vite on port 3000)');
+
+// API endpoint to provide app info
+app.get('/api/app-info', function (req, res) {
+  res.json({
+    version: APP_VERSION,
+    productionMode: true // This indicates we're running via Express server (npm run start)
+  });
+});
 
 app.get('/', function (req, res) {
   // Serve from dist in production, or use Vite dev server in development
