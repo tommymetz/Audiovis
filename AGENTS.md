@@ -154,6 +154,14 @@ For information about future development workflow and modernization plans, see [
 - Modern ES6+ browsers (no IE11)
 - WebGL 1.0/2.0 support via Three.js v0.145
 
+## Pull Request Checklist
+
+**Before creating a PR, always:**
+- **Increment the version number** in [package.json](package.json) (follow semantic versioning: MAJOR.MINOR.PATCH)
+  - PATCH version (1.0.X) for bug fixes and minor changes
+  - MINOR version (1.X.0) for new features (backwards compatible)
+  - MAJOR version (X.0.0) for breaking changes
+
 ## Notes for AI Agents
 
 ### When Working with This Codebase
