@@ -24,8 +24,8 @@ var Spectrum = /*#__PURE__*/function () {
       var geometry = new THREE.BufferGeometry();
       var positions = new Float32Array(MAX_POINTS * 3);
       var normals = new Float32Array(MAX_POINTS * 3);
-      geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3));
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
       var material = new THREE.MeshBasicMaterial({
         color: this.color,
         wireframe: false,
