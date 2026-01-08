@@ -361,7 +361,7 @@ export class Scene {
           // Note: Keep this version in sync with package.json manually
           const versionElement = document.getElementById('version');
           if (versionElement) {
-            versionElement.textContent = 'v1.0.4';
+            versionElement.textContent = 'n/a';
           }
         });
     }

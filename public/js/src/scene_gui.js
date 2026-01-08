@@ -80,7 +80,7 @@ export class SceneGui {
 
   init(){
     const mythis = this;
-    this.updateVisibility(!this.parent.hide_controls);
+    this.updateVisibility(true);
 
     //this.title.innerHTML = this.parent.playlist.name;
 
