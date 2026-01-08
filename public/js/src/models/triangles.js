@@ -1,4 +1,6 @@
-class Triangles {
+import * as THREE from 'three';
+
+export class Triangles {
   constructor(scene, stem, color) {
     const mythis = this;
     this.scene = scene;
@@ -98,6 +100,3 @@ class Triangles {
 
   //
 }
-
-// Expose to global scope for compatibility
-window.Triangles = Triangles;

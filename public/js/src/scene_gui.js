@@ -1,4 +1,4 @@
-class SceneGui {
+export class SceneGui {
 
   constructor(parent){
     const mythis = this;
@@ -169,15 +169,3 @@ class SceneGui {
     xhttp.send(JSON.stringify(this.state));*/
   //}
 }
-
-// Expose to global scope for compatibility
-window.SceneGui = SceneGui;
-
-
-
-
-
-
-
-
-//

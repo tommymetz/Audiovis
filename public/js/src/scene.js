@@ -1,40 +1,44 @@
-(() => {
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Stats from 'stats.js';
+import { SceneGui } from './scene_gui.js';
+import { Song } from './song.js';
 
-  // WebGL detection function (replaces deprecated Detector.js)
-  function isWebGLAvailable() {
-    try {
-      const canvas = document.createElement('canvas');
-      return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-    } catch (e) {
-      return false;
-    }
+// WebGL detection function (replaces deprecated Detector.js)
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+  } catch (e) {
+    return false;
   }
+}
 
-  //Detect and start game
-  window.onload = () => {
-    if(isWebGLAvailable()){
-      var ua = navigator.userAgent;
-      //console.log('ua', ua);
-      var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
-      if(is_ie){
-        document.getElementById('loading').innerHTML = 'Please use a different browser. This site works best in Chrome.';
-      }else{
-        const theScene = new Scene();
-      }
+//Detect and start game
+window.onload = () => {
+  if(isWebGLAvailable()){
+    var ua = navigator.userAgent;
+    //console.log('ua', ua);
+    var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
+    if(is_ie){
+      document.getElementById('loading').innerHTML = 'Please use a different browser. This site works best in Chrome.';
     }else{
-      console.log('WebGL is not available in this browser');
-      document.getElementById('loading').innerHTML = 'This browser does not support WebGL';
+      const theScene = new Scene();
     }
+  }else{
+    console.log('WebGL is not available in this browser');
+    document.getElementById('loading').innerHTML = 'This browser does not support WebGL';
   }
+}
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //GAME INIT////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  class Scene {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//GAME INIT////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export class Scene {
     constructor() {
       const mythis = this;
 
@@ -109,7 +113,7 @@
       ////////////////////////////////////////////////////////////////////////////
 
       // CONTROLS
-      this.orbitcontrols = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+      this.orbitcontrols = new OrbitControls(this.camera, this.renderer.domElement);
 
       //Camera
       this.camera.position.set(0, -10, 22); //-15, 10, 20 | 0, 3, 20 | -10, 5, 10
@@ -307,21 +311,3 @@
       xobj.send(null);
     }
   }
-
-  // Expose to global scope for compatibility
-  window.Scene = Scene;
-})();
-
-
-
-
-
-
-
-
-
-
-
-
-
-//

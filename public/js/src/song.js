@@ -1,4 +1,9 @@
-class Song {
+import * as THREE from 'three';
+import { SongGui } from './song_gui.js';
+import { Stem } from './stem.js';
+import { getColorSet } from './colors/colorsWarmCold.js';
+
+export class Song {
   constructor(parent, location, songjsonfile, attributesjson, scene, audiolistener, fps, hide_controls=false) {
     const mythis = this;
     this.parent = parent;
@@ -62,7 +67,7 @@ class Song {
 
           //Populate with colorset
           let colorindex = 0;
-          let colorset = eval(mythis.attributes.colorset);
+          let colorset = getColorSet(mythis.attributes.colorset);
           mythis.stemnames.forEach(function(element, index){
             mythis.colors.push(colorset[colorindex]);
             colorindex++;
@@ -259,6 +264,3 @@ class Song {
 
   //
 }
-
-// Expose to global scope for compatibility
-window.Song = Song;

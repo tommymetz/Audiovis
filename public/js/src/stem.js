@@ -1,4 +1,8 @@
-class Stem {
+import * as THREE from 'three';
+import { Triangles } from './models/triangles.js';
+import { Spectrum } from './models/spectrum.js';
+
+export class Stem {
   constructor(location, name, index, order, scene, stemgroup, color) {
     this.location = location;
     this.name = name;
@@ -239,6 +243,3 @@ class Stem {
     xobj.send(null);
   }
 }
-
-// Expose to global scope for compatibility
-window.Stem = Stem;

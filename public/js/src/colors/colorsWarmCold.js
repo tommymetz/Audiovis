@@ -1,4 +1,4 @@
-const colorsWarmCold = [
+export const colorsWarmCold = [
   '#FFFFFF',
   '#6F256F',
   '#530E53',
@@ -28,8 +28,19 @@ const colorsWarmCold = [
   0xC56277*/
 ];
 
-// Expose to global scope for compatibility
-window.colorsWarmCold = colorsWarmCold;
+// Color registry for dynamic color set lookup
+const colorRegistry = {
+  colorsWarmCold
+};
+
+/**
+ * Get a color set by name
+ * @param {string} name - Name of the color set
+ * @returns {string[]} - Array of color strings
+ */
+export function getColorSet(name) {
+  return colorRegistry[name] || colorsWarmCold;
+}
 
   /*this.colors = [
     0x6F256F,

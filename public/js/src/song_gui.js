@@ -1,4 +1,6 @@
-class SongGui {
+import Sortable from 'sortablejs';
+
+export class SongGui {
 
   constructor(parent){
     const mythis = this;
@@ -198,15 +200,3 @@ class SongGui {
     xhttp.send(JSON.stringify(this.state));
   }
 }
-
-// Expose to global scope for compatibility
-window.SongGui = SongGui;
-
-
-
-
-
-
-
-
-//

@@ -30,11 +30,11 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] 2.0.4 Remove Grunt and all grunt-related packages
   - [x] 2.0.5 Remove Gruntfile.js
   - [x] 2.0.6 Update package.json scripts to use Vite
-- [ ] **2.1 Implement ES Modules**
-  - [ ] 2.1.0 Convert all JavaScript files to use ES6 import/export
-  - [ ] 2.1.1 Remove dependency on global THREE namespace
-  - [ ] 2.1.2 Properly import Three.js modules
-  - [ ] 2.1.3 Update HTML to use module script tag
+- [x] **2.1 Implement ES Modules**
+  - [x] 2.1.0 Convert all JavaScript files to use ES6 import/export
+  - [x] 2.1.1 Remove dependency on global THREE namespace
+  - [x] 2.1.2 Properly import Three.js modules
+  - [x] 2.1.3 Update HTML to use module script tag
 - [ ] **2.2 Optimize Asset Pipeline**
   - [ ] 2.2.0 Configure Vite to handle SCSS natively
   - [ ] 2.2.1 Enable tree shaking for unused code removal
