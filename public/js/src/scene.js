@@ -357,7 +357,8 @@ export class Scene {
           }
         })
         .catch(() => {
-          // Fallback if package.json is not accessible
+          // Fallback if package.json is not accessible (should rarely happen)
+          // Note: Keep this version in sync with package.json manually
           const versionElement = document.getElementById('version');
           if (versionElement) {
             versionElement.textContent = 'v1.0.4';

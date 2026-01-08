@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import fs from 'fs';
 
 // Read package.json once at startup for better performance
-const packageJson = JSON.parse(fs.readFileSync(resolve(import.meta.dirname || __dirname, 'package.json'), 'utf8'));
+const packageJson = JSON.parse(fs.readFileSync(resolve(__dirname, 'package.json'), 'utf8'));
 
 export default defineConfig({
   root: 'public',
