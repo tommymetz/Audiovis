@@ -6,12 +6,19 @@ const fs = require('fs');
 
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
-app.use(express.static(__dirname + '/public'));
-server.listen(3000);
-console.log('http://localhost:3000');
+// Serve from dist in production, or public as fallback
+const staticDir = fs.existsSync(__dirname + '/dist') ? '/dist' : '/public';
+app.use(express.static(__dirname + staticDir));
+server.listen(3001);
+console.log('Express server running on http://localhost:3001');
+console.log('For development, use: npm run dev (Vite on port 3000)');
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/public/index.html');
+  // Serve from dist in production, or use Vite dev server in development
+  const indexPath = fs.existsSync(__dirname + '/dist/index.html') 
+    ? __dirname + '/dist/index.html'
+    : __dirname + '/public/index.html';
+  res.sendFile(indexPath);
 });
 
 app.post('/config/save', function (req, res) {

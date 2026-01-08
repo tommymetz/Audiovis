@@ -25,10 +25,9 @@ Horizon is an interactive audio-visual experience that combines Three.js 3D grap
 
 ## Prerequisites
 
-- Node.js (v8 or higher recommended)
+- Node.js (v20 or higher)
 - Python (for audio processing)
 - LAME encoder (for MP3 conversion)
-- Grunt CLI: `npm install -g grunt-cli`
 
 ## Installation
 
@@ -56,34 +55,44 @@ lame --abr 90 WaitingForTime2/WaitingForTime2.wav WaitingForTime2/WaitingForTime
 cd ../..
 ```
 
-## Building
+## Development
 
-Build the application using Grunt:
-
+**For Development** (with Hot Module Replacement):
 ```bash
-# Build all assets (JS, CSS)
-npm run build
+npm run dev
+```
+This starts the Vite dev server on http://localhost:3000 with instant reloading.
 
-# Build dependencies only
-npm run build-dep
+**Build for Production:**
+```bash
+npm run build
 ```
 
 This will:
-- Compile and minify JavaScript files
-- Process SCSS to CSS
-- Run linting checks
+- Bundle and minify JavaScript modules using Vite
+- Compile SCSS to CSS
+- Copy static assets (content, images) to `dist/`
+- Generate source maps for debugging
 
 ## Running the Application
 
-1. Start the Express server:
+**For Development:**
+```bash
+npm run dev
+```
+Open your browser to http://localhost:3000 (Vite dev server with HMR)
+
+**For Production:**
 ```bash
 npm start
 ```
+This builds the project and starts the Express server on http://localhost:3001
 
-2. Open your browser and navigate to:
+**Socket.IO Server Only** (if needed for frame rendering):
+```bash
+npm run dev:server
 ```
-http://localhost:3000
-```
+Runs the Express server on port 3001
 
 ## Audio Processing
 
@@ -103,32 +112,33 @@ These scripts are located in the `processor/` directory and handle spectral anal
 
 ```
 Audiovis_1.0_Horizon/
-├── public/                 # Client-side assets
-│   ├── content/           # Audio files and content
-│   ├── css/               # Stylesheets (SCSS/CSS)
-│   ├── js/                # JavaScript source and compiled files
+├── public/                 # Source files and assets
+│   ├── content/           # Audio files and JSON analysis data
+│   ├── css/scss/          # SCSS source files
+│   ├── js/src/            # JavaScript ES6 modules
 │   ├── img/               # Images and assets
 │   └── index.html         # Main HTML file
+├── dist/                  # Production build output (generated)
 ├── processor/             # Python audio processing scripts
-├── index.js               # Express server
-├── Gruntfile.js          # Grunt build configuration
-└── package.json          # Node.js dependencies and scripts
+├── index.js               # Express server (port 3001)
+├── vite.config.js         # Vite build configuration
+└── package.json           # Node.js dependencies and scripts
 ```
 
 ## Technologies Used
 
-- **Frontend**: Three.js, Socket.IO, dat.GUI, Stats.js, SortableJS
+- **Frontend**: Three.js (v0.145.0), Socket.IO, dat.GUI, Stats.js, SortableJS
 - **Backend**: Node.js, Express
-- **Build Tools**: Grunt, Babel
+- **Build Tools**: Vite (v7.x), Sass
 - **Audio Processing**: Python, LAME encoder
 
-## Development
+## Development Workflow
 
-The project uses Grunt for asset compilation and includes:
-- JavaScript linting with JSHint
-- SCSS compilation
-- JavaScript minification and source maps
-- Watch tasks for development
+The project uses Vite for modern development:
+- **Hot Module Replacement (HMR)**: Instant updates without full page reload
+- **SCSS compilation**: Automatic preprocessing with source maps
+- **ES Module bundling**: Optimized production bundles
+- **Fast dev server**: Lightning-fast startup and rebuild times
 
 ## Credits
 

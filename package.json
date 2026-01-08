@@ -1,6 +1,6 @@
 {
   "name": "audiovis",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "dependencies": {
     "dat.gui": "^0.7.9",
     "express": "^4.22.1",
@@ -14,10 +14,11 @@
     "playlist": "python processor/playlist.py",
     "analysis": "python processor/main.py",
     "dev": "vite",
+    "dev:server": "node index.js",
     "build": "vite build && npm run copy-static",
     "copy-static": "cp -r public/content dist/ && cp -r public/img dist/ && cp public/share.jpg dist/",
     "preview": "vite preview",
-    "start": "node index.js"
+    "start": "npm run build && node index.js"
   },
   "devDependencies": {
     "vite": "^7.3.1"
