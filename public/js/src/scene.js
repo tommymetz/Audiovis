@@ -360,7 +360,7 @@ export class Scene {
           // Fallback if package.json is not accessible
           const versionElement = document.getElementById('version');
           if (versionElement) {
-            versionElement.textContent = 'v1.0.3';
+            versionElement.textContent = 'v1.0.4';
           }
         });
     }

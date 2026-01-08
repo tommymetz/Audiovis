@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import fs from 'fs';
 
+// Read package.json once at startup for better performance
+const packageJson = JSON.parse(fs.readFileSync(resolve(import.meta.dirname || __dirname, 'package.json'), 'utf8'));
+
 export default defineConfig({
   root: 'public',
   base: '/',
@@ -34,7 +37,8 @@ export default defineConfig({
         server.middlewares.use((req, res, next) => {
           if (req.url === '/package.json') {
             res.setHeader('Content-Type', 'application/json');
-            res.end(fs.readFileSync(resolve(__dirname, 'package.json')));
+            // Only serve version field to avoid exposing sensitive information
+            res.end(JSON.stringify({ version: packageJson.version }));
           } else {
             next();
           }
