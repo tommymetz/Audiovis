@@ -130,7 +130,7 @@ class Spectrum {
 
   updateSpectrum() {
     // Guard against undefined objects (happens when allquietsamples is true)
-    if (!this.spectrum) {
+    if (!this.spectrum || !this.stem.centroids || !this.stem.centroid_indexes) {
       return;
     }
     const multiplyer = this.stem.json.track.byte_num_range; //255, 65535

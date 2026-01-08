@@ -152,7 +152,7 @@ var Spectrum = /*#__PURE__*/function () {
     key: "updateSpectrum",
     value: function updateSpectrum() {
       // Guard against undefined objects (happens when allquietsamples is true)
-      if (!this.spectrum) {
+      if (!this.spectrum || !this.stem.centroids || !this.stem.centroid_indexes) {
         return;
       }
       var multiplyer = this.stem.json.track.byte_num_range; //255, 65535

@@ -66,7 +66,7 @@ class Triangles {
 
   updateTriangles() {
     // Guard against undefined objects (happens when allquietsamples is true)
-    if (!this.triangles) {
+    if (!this.triangles || !this.stem.volume) {
       return;
     }
     let volume = Math.log10(this.stem.volume[this.stem.frame] / this.stem.multiplyer * this.stem.factor * this.stem.maxvolume) / 1;
