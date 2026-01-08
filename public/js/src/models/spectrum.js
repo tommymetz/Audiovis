@@ -1,4 +1,6 @@
-class Spectrum {
+import * as THREE from 'three';
+
+export class Spectrum {
   constructor(scene, stem, color) {
     const mythis = this;
     this.scene = scene;
@@ -252,6 +254,3 @@ class Spectrum {
 
   //
 }
-
-// Expose to global scope for compatibility
-window.Spectrum = Spectrum;

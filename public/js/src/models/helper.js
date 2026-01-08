@@ -1,4 +1,6 @@
-class Helper {
+import * as THREE from 'three';
+
+export class Helper {
   constructor(scene, stem) {
     const mythis = this;
     this.scene = scene;
@@ -40,6 +42,3 @@ class Helper {
 
   //
 }
-
-// Expose to global scope for compatibility
-window.Helper = Helper;
