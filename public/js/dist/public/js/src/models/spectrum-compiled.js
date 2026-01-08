@@ -19,6 +19,10 @@ var Spectrum = /*#__PURE__*/function () {
     key: "initSpectrum",
     value: function initSpectrum() {
       //Spectrum Shape
+      // Guard against undefined centroids (happens when allquietsamples is true)
+      if (!this.stem.centroids || !this.stem.centroids[0]) {
+        return;
+      }
       var CENTROID_LENGTH = this.stem.centroids[0].length;
       var MAX_POINTS = CENTROID_LENGTH * 2;
       var geometry = new THREE.BufferGeometry();
@@ -147,6 +151,10 @@ var Spectrum = /*#__PURE__*/function () {
   }, {
     key: "updateSpectrum",
     value: function updateSpectrum() {
+      // Guard against undefined objects (happens when allquietsamples is true)
+      if (!this.spectrum) {
+        return;
+      }
       var multiplyer = this.stem.json.track.byte_num_range; //255, 65535
       var factor = 100000;
       var vqi = this.stem.centroid_indexes[this.stem.frame];
@@ -251,6 +259,10 @@ var Spectrum = /*#__PURE__*/function () {
   }, {
     key: "updateColor",
     value: function updateColor(color) {
+      // Guard against undefined objects (happens when allquietsamples is true)
+      if (!this.spectrum || !this.spectrummirror) {
+        return;
+      }
       this.spectrum.material.color.set(color);
       this.spectrummirror.material.color.set(color);
     }

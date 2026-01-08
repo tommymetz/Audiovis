@@ -10,6 +10,10 @@ class Spectrum {
 
   initSpectrum() {
     //Spectrum Shape
+    // Guard against undefined centroids (happens when allquietsamples is true)
+    if (!this.stem.centroids || !this.stem.centroids[0]) {
+      return;
+    }
     const CENTROID_LENGTH = this.stem.centroids[0].length;
     const MAX_POINTS = CENTROID_LENGTH * 2;
     const geometry = new THREE.BufferGeometry();
@@ -125,6 +129,10 @@ class Spectrum {
   }
 
   updateSpectrum() {
+    // Guard against undefined objects (happens when allquietsamples is true)
+    if (!this.spectrum) {
+      return;
+    }
     const multiplyer = this.stem.json.track.byte_num_range; //255, 65535
     const factor = 100000;
     const vqi = this.stem.centroid_indexes[this.stem.frame];
@@ -221,6 +229,10 @@ class Spectrum {
   }
 
   updateColor(color){
+    // Guard against undefined objects (happens when allquietsamples is true)
+    if (!this.spectrum || !this.spectrummirror) {
+      return;
+    }
     this.spectrum.material.color.set(color);
     this.spectrummirror.material.color.set(color);
   }

@@ -11,6 +11,10 @@ class Triangles {
   }
 
   initTriangles(){
+    // Guard against undefined centroids (happens when allquietsamples is true)
+    if (!this.stem.centroids || !this.stem.centroids[0]) {
+      return;
+    }
     const CENTROID_LENGTH = this.stem.centroids[0].length;
     const MAX_POINTS = CENTROID_LENGTH * 2;
     const geometry = new THREE.BufferGeometry();
@@ -61,6 +65,10 @@ class Triangles {
   }
 
   updateTriangles() {
+    // Guard against undefined objects (happens when allquietsamples is true)
+    if (!this.triangles) {
+      return;
+    }
     let volume = Math.log10(this.stem.volume[this.stem.frame] / this.stem.multiplyer * this.stem.factor * this.stem.maxvolume) / 1;
     if(volume <= 0.5){
       if(!this.zeroed){
@@ -78,6 +86,10 @@ class Triangles {
   }
 
   updateColor(color){
+    // Guard against undefined objects (happens when allquietsamples is true)
+    if (!this.triangles || !this.trianglesmirror) {
+      return;
+    }
     this.triangles.material.color.set(color);
     this.trianglesmirror.material.color.set(color);
   }
