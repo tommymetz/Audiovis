@@ -14,8 +14,6 @@ export default defineConfig({
         main: resolve(__dirname, 'public/index.html'),
       },
     },
-    // Copy static assets that need to be served from the root
-    copyPublicDir: false,
   },
   server: {
     port: 3000,

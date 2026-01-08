@@ -8,12 +8,9 @@ import Stats from 'stats.js';
 import * as dat from 'dat.gui';
 import Sortable from 'sortablejs';
 
-// Create a new THREE object that extends the imported one (since imports are frozen)
-const THREEExtended = Object.assign({}, THREE);
-THREEExtended.OrbitControls = OrbitControls;
-
-// Expose libraries to global scope for compatibility with existing code
-window.THREE = THREEExtended;
+// Expose THREE to global scope for compatibility with existing code
+// Note: We spread THREE properties onto a new object because the import is immutable
+window.THREE = { ...THREE, OrbitControls };
 window.Stats = Stats;
 window.dat = dat;
 window.Sortable = Sortable;
