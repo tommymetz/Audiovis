@@ -61,6 +61,9 @@ export class Scene {
           if (appInfo.productionMode) {
             mythis.hide_controls = false;
           }
+        } else {
+          // Not running via Express server, fetch version from package.json
+          mythis.setDevModeVersion();
         }
       }).catch(() => {
         // If fetch fails, we're in dev mode (Vite), use default hide_controls = true
