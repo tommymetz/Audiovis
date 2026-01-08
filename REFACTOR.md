@@ -22,14 +22,14 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] 1.2.3 Add OS-specific files (.DS_Store handled, add Thumbs.db)
 
 ### Phase 2: Modern Build System Migration
-- [ ] **2.0 Migrate from Grunt to Vite**
-  - [ ] 2.0.0 Install Vite and required plugins
-  - [ ] 2.0.1 Create `vite.config.js` with appropriate configuration
-  - [ ] 2.0.2 Configure Vite for Three.js and other dependencies
-  - [ ] 2.0.3 Set up dev server with HMR (Hot Module Replacement)
-  - [ ] 2.0.4 Remove Grunt and all grunt-related packages
-  - [ ] 2.0.5 Remove Gruntfile.js
-  - [ ] 2.0.6 Update package.json scripts to use Vite
+- [x] **2.0 Migrate from Grunt to Vite**
+  - [x] 2.0.0 Install Vite and required plugins
+  - [x] 2.0.1 Create `vite.config.js` with appropriate configuration
+  - [x] 2.0.2 Configure Vite for Three.js and other dependencies
+  - [x] 2.0.3 Set up dev server with HMR (Hot Module Replacement)
+  - [x] 2.0.4 Remove Grunt and all grunt-related packages
+  - [x] 2.0.5 Remove Gruntfile.js
+  - [x] 2.0.6 Update package.json scripts to use Vite
 - [ ] **2.1 Implement ES Modules**
   - [ ] 2.1.0 Convert all JavaScript files to use ES6 import/export
   - [ ] 2.1.1 Remove dependency on global THREE namespace
@@ -185,7 +185,7 @@ This document outlines the modernization roadmap and future development plans fo
   - [ ] 10.2.2 Implement performance monitoring
   - [ ] 10.2.3 Add usage analytics
 
-## Future Development Workflow (After Vite Migration)
+## Development Workflow
 
 ```bash
 # Install dependencies
@@ -200,25 +200,25 @@ npm run build
 # Preview production build
 npm run preview
 
-# Run tests
-npm run test
-
-# Lint code
-npm run lint
-
-# Format code
-npm run format
+# Start Express server (for production with socket.io features)
+npm start
 ```
 
-## Dependencies to Consider Removing/Replacing
+## Dependencies Removed (Phase 2.0)
 
-- **grunt** → Vite
-- **grunt-contrib-jshint** → ESLint
-- **grunt-contrib-uglify** → Vite (built-in)
-- **grunt-contrib-watch** → Vite (built-in HMR)
-- **grunt-sass** → Vite (built-in)
-- **grunt-babel** → Vite (built-in) or remove (modern browsers)
-- **body-parser** → Express 4.16+ has built-in body parser
+The following Grunt-related dependencies have been removed and replaced by Vite:
+- ~~grunt~~ → Vite
+- ~~grunt-contrib-jshint~~ → (ESLint in future)
+- ~~grunt-contrib-uglify~~ → Vite (built-in)
+- ~~grunt-contrib-watch~~ → Vite (built-in HMR)
+- ~~grunt-sass~~ → Vite (built-in)
+- ~~grunt-babel~~ → Vite (built-in)
+- ~~@babel/core~~ → Not needed (Vite handles modern JS)
+- ~~@babel/preset-env~~ → Not needed (targeting modern browsers)
+
+## Dependencies to Consider Removing/Replacing (Future)
+
+- **body-parser** → Express 4.16+ has built-in body parser (already removed)
 - **Potentially consolidate**: dat.gui could be replaced with custom UI
 
 ## Browser Support Target

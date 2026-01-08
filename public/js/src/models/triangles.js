@@ -98,3 +98,6 @@ class Triangles {
 
   //
 }
+
+// Expose to global scope for compatibility
+window.Triangles = Triangles;

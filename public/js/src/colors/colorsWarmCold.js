@@ -28,6 +28,9 @@ const colorsWarmCold = [
   0xC56277*/
 ];
 
+// Expose to global scope for compatibility
+window.colorsWarmCold = colorsWarmCold;
+
   /*this.colors = [
     0x6F256F,
     0x530E53,

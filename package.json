@@ -1,14 +1,9 @@
 {
   "name": "audiovis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "dat.gui": "^0.7.9",
     "express": "^4.22.1",
-    "grunt": "^1.6.1",
-    "grunt-contrib-jshint": "^3.2.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-sass": "^4.0.1",
     "sass": "^1.97.2",
     "socket.io": "^4.8.3",
     "sortablejs": "^1.15.6",
@@ -18,19 +13,19 @@
   "scripts": {
     "playlist": "python processor/playlist.py",
     "analysis": "python processor/main.py",
-    "build": "grunt",
-    "build-dep": "grunt dep",
+    "dev": "vite",
+    "build": "vite build && npm run copy-static",
+    "copy-static": "cp -r public/content dist/ && cp -r public/img dist/ && cp public/share.jpg dist/",
+    "preview": "vite preview",
     "start": "node index.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
-    "grunt-babel": "^8.0.0"
+    "vite": "^7.3.1"
   },
   "overrides": {
     "debug": ">=4.3.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }

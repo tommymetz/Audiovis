@@ -199,6 +199,9 @@ class SongGui {
   }
 }
 
+// Expose to global scope for compatibility
+window.SongGui = SongGui;
+
 
 
 

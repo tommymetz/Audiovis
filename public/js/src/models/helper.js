@@ -40,3 +40,6 @@ class Helper {
 
   //
 }
+
+// Expose to global scope for compatibility
+window.Helper = Helper;
