@@ -259,3 +259,6 @@ class Song {
 
   //
 }
+
+// Expose to global scope for compatibility
+window.Song = Song;

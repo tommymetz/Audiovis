@@ -239,3 +239,6 @@ class Stem {
     xobj.send(null);
   }
 }
+
+// Expose to global scope for compatibility
+window.Stem = Stem;

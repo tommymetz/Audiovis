@@ -307,6 +307,9 @@
       xobj.send(null);
     }
   }
+
+  // Expose to global scope for compatibility
+  window.Scene = Scene;
 })();
 
 

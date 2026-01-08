@@ -252,3 +252,6 @@ class Spectrum {
 
   //
 }
+
+// Expose to global scope for compatibility
+window.Spectrum = Spectrum;

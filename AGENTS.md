@@ -9,10 +9,10 @@ This is an interactive 3D audio visualization application built by [Glissline](h
 ## Current Technology Stack
 
 ### Frontend
-- **Three.js** (v0.89.0) - 3D graphics rendering
+- **Three.js** (v0.145.0) - 3D graphics rendering
 - **dat.GUI** (v0.7.9) - GUI controls
 - **Stats.js** (v0.17.0) - Performance monitoring
-- **SortableJS** (v1.7.0) - Drag and drop functionality
+- **SortableJS** (v1.15.6) - Drag and drop functionality
 - **Socket.IO** (client) - Real-time communication
 - **Vanilla JavaScript (ES6)** - Application logic
 
@@ -22,12 +22,8 @@ This is an interactive 3D audio visualization application built by [Glissline](h
 - **Python** - Audio analysis and processing
 
 ### Build Tools
-- **Grunt** (v1.0.3) - Task runner
-- **grunt-contrib-jshint** - JavaScript linting
-- **grunt-contrib-uglify** - JavaScript minification
-- **grunt-sass** - SCSS compilation
-- **grunt-babel** - JavaScript transpilation (ES6 to ES5)
-- **grunt-contrib-watch** - File watching
+- **Vite** (v7.x) - Modern build tool with HMR
+- **Sass** (v1.97.x) - SCSS compilation (via Vite)
 
 ## Project Structure
 
@@ -40,29 +36,25 @@ Audiovis_1.0_Horizon/
 │   │   ├── SlowlyForget/
 │   │   └── WaitingForTime/
 │   ├── css/
-│   │   ├── scss/            # SCSS source files
-│   │   │   └── main.scss
-│   │   └── styles.min.css   # Compiled CSS (generated)
+│   │   └── scss/            # SCSS source files
+│   │       └── main.scss
 │   ├── js/
-│   │   ├── src/             # JavaScript source files
-│   │   │   ├── colors/      # Color-related modules
-│   │   │   ├── models/      # 3D model classes
-│   │   │   │   ├── helper.js
-│   │   │   │   ├── spectrum.js
-│   │   │   │   └── triangles.js
-│   │   │   ├── scene.js     # Main scene controller
-│   │   │   ├── scene_gui.js # Scene GUI controls
-│   │   │   ├── song.js      # Song controller
-│   │   │   ├── song_gui.js  # Song GUI controls
-│   │   │   └── stem.js      # Audio stem controller
-│   │   ├── dist/            # Babel-compiled files (generated)
-│   │   ├── app.min.js       # Minified app bundle (generated)
-│   │   ├── app.min.map      # Source map (generated)
-│   │   ├── dep.min.js       # Minified dependencies (generated)
-│   │   └── dep.min.map      # Source map (generated)
+│   │   └── src/             # JavaScript source files
+│   │       ├── main.js      # Entry point (imports dependencies)
+│   │       ├── colors/      # Color-related modules
+│   │       ├── models/      # 3D model classes
+│   │       │   ├── helper.js
+│   │       │   ├── spectrum.js
+│   │       │   └── triangles.js
+│   │       ├── scene.js     # Main scene controller
+│   │       ├── scene_gui.js # Scene GUI controls
+│   │       ├── song.js      # Song controller
+│   │       ├── song_gui.js  # Song GUI controls
+│   │       └── stem.js      # Audio stem controller
 │   ├── img/                 # Images and assets
 │   ├── tmp/                 # Temporary frame exports
 │   └── index.html           # Main HTML entry point
+├── dist/                    # Production build output (generated)
 ├── processor/               # Python audio processing scripts
 │   ├── analysis.py          # Audio analysis utilities
 │   ├── kmeans.py            # K-means clustering for audio
@@ -73,9 +65,9 @@ Audiovis_1.0_Horizon/
 │   ├── vector_quantize.py   # Vector quantization
 │   └── worker_*.py          # Parallel processing workers
 ├── index.js                 # Express server entry point
-├── Gruntfile.js            # Grunt configuration
-├── package.json            # Node.js dependencies
-└── README.md               # Project documentation
+├── vite.config.js           # Vite configuration
+├── package.json             # Node.js dependencies
+└── README.md                # Project documentation
 ```
 
 ## Key Features & Architecture
@@ -86,13 +78,16 @@ Audiovis_1.0_Horizon/
 - **3D Scene Management**: Dynamic 3D objects synchronized with audio
 - **Interactive Controls**: Mouse/touch navigation and playback controls
 
-### Build Pipeline
-1. **SCSS Compilation**: `public/css/scss/main.scss` → `public/css/styles.min.css`
-2. **JavaScript Linting**: JSHint validates code quality
-3. **JavaScript Transpilation**: Babel converts ES6+ to ES5
-4. **JavaScript Bundling**: Uglify minifies and bundles:
-   - App code: `public/js/src/**/*.js` → `public/js/app.min.js`
-   - Dependencies: Third-party libs → `public/js/dep.min.js`
+### Build Pipeline (Vite)
+1. **Development**: `npm run dev` - Starts Vite dev server with HMR
+2. **Production Build**: `npm run build` - Creates optimized bundle in `dist/`
+3. **Preview**: `npm run preview` - Preview production build locally
+
+The build process:
+- Bundles all JavaScript modules starting from `public/js/src/main.js`
+- Compiles SCSS to CSS
+- Copies static assets (content/, img/, share.jpg) to dist/
+- Generates source maps for debugging
 
 ### Audio Processing Workflow
 1. Python scripts analyze WAV audio files
@@ -103,26 +98,24 @@ Audiovis_1.0_Horizon/
 ## Known Issues & Technical Debt
 
 ### Security & Deprecation Issues
-- **Old Node.js Dependencies**: Several packages have security vulnerabilities (4 vulnerabilities remain)
-- **Outdated Three.js**: v0.89.0 (2017) - many versions behind current
+- **Dependencies Updated**: Security vulnerabilities addressed in Phase 1
+- **Three.js Updated**: Now using v0.145.0 (last UMD-compatible version)
 
 ### Code Quality
 - **ES6 Classes Mixed with ES5 Patterns**: Inconsistent JavaScript patterns
-- **No Module System**: Using global scripts instead of ES modules
+- **Global Namespace**: Still using global window assignments for compatibility
 - **Limited Error Handling**: Minimal error boundaries and validation
 - **Commented-out Code**: Dead code throughout (OSC, socket.io usage)
 - **No TypeScript**: Lacks type safety and IDE support
 
 ### Build & Development
-- **Grunt is Legacy**: Industry has moved to Vite, Webpack, or esbuild
-- **No Hot Module Replacement**: Requires manual refresh during development
-- **Slow Build Times**: Multiple transpilation/minification steps
-- **No Tree Shaking**: Bundles include unused code
-- **Separate Babel Step**: Unnecessary intermediate compilation
+- **Vite Migration Complete**: Modern build system with HMR
+- **Fast Builds**: Vite provides instant dev server and fast production builds
+- **Tree Shaking**: Vite optimizes bundles automatically
 
 ### Testing & Quality Assurance
 - **No Automated Tests**: Zero test coverage (unit, integration, or e2e)
-- **No Linting Configuration**: JSHint is outdated (prefer ESLint)
+- **No Linting Configuration**: ESLint not yet configured (Phase 3)
 - **No Code Formatting**: No Prettier or consistent formatting rules
 - **No CI/CD**: No automated builds or deployment
 
@@ -130,7 +123,6 @@ Audiovis_1.0_Horizon/
 - **Flat Directory Structure**: `public/js/src/` could benefit from better organization
 - **Mixed Concerns**: Server logic minimal but could be better organized
 - **No Environment Configuration**: Hardcoded values (ports, URLs)
-- **Python .pyc Files in Repo**: Compiled Python files should be gitignored
 
 ## Quick Start for Contributors
 
@@ -138,14 +130,17 @@ Audiovis_1.0_Horizon/
 # Install dependencies
 npm install
 
-# Build the project
+# Start development server with HMR
+npm run dev
+
+# Build for production
 npm run build
 
-# Start the development server
-npm start
+# Preview production build
+npm run preview
 
-# Watch for changes (in separate terminal)
-npx grunt watch
+# Start Express server (for socket.io features)
+npm start
 ```
 
 For information about future development workflow and modernization plans, see [REFACTOR.md](REFACTOR.md).
@@ -153,37 +148,38 @@ For information about future development workflow and modernization plans, see [
 ## Browser Support Target
 
 ### Current
-- Legacy ES5 support via Babel
-- WebGL 1.0 support via Three.js v0.89
+- Modern ES6+ browsers (no IE11)
+- WebGL 1.0/2.0 support via Three.js v0.145
 
 ## Notes for AI Agents
 
 ### When Working with This Codebase
-1. **Build before changes**: Always run `npm run build` before making code changes to understand existing issues
-2. **Dependencies are old**: Be aware of deprecated APIs and patterns
+1. **Use Vite dev server**: Run `npm run dev` for development with HMR
+2. **Dependencies are modern**: Three.js v0.145 and updated packages
 3. **No type safety**: Exercise caution with refactoring; easy to break things
 4. **Audio analysis data**: JSON files in `public/content/` are generated by Python scripts
-5. **Global dependencies**: Three.js and other libraries are loaded globally in HTML
+5. **Global dependencies**: Libraries are exposed via window object from main.js
 6. **Server is simple**: Express server is minimal; most logic is client-side
 7. **Production site**: Changes affect live site at horizon.glissline.com
 
 ### Common Tasks
-- **Add new visualization**: Create class in `public/js/src/models/`
+- **Add new visualization**: Create class in `public/js/src/models/`, add to main.js
 - **Modify scene**: Edit `public/js/src/scene.js`
-- **Update styles**: Edit `public/css/scss/main.scss` and rebuild
+- **Update styles**: Edit `public/css/scss/main.scss` (auto-reloads in dev)
 - **Change audio behavior**: Edit `public/js/src/song.js` or `public/js/src/stem.js`
 - **Server changes**: Edit `index.js`
 
 ### Testing Changes
 ```bash
-# Build the project
-npm run build
-
-# Start server
-npm start
+# Start development server with HMR
+npm run dev
 
 # Open http://localhost:3000 in browser
-# Check browser console for errors
+# Changes auto-reload
+
+# For production build testing
+npm run build
+npm run preview
 ```
 
 For information about modernization priorities and future improvements, see [REFACTOR.md](REFACTOR.md).

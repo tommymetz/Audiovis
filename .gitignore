@@ -4,9 +4,17 @@ node_modules
 .sass-cache
 AudioTestFile Project/AudioTestFile.wav
 
-# Build output
+# Vite build output
+dist/
+
+# Legacy Grunt build output (no longer used)
 public/js/dist/
 public/css/styles.min.css
+public/css/styles.min.css.map
+public/js/app.min.js
+public/js/app.min.map
+public/js/dep.min.js
+public/js/dep.min.map
 
 # Python
 *.pyc

@@ -170,6 +170,9 @@ class SceneGui {
   //}
 }
 
+// Expose to global scope for compatibility
+window.SceneGui = SceneGui;
+
 
 
 
