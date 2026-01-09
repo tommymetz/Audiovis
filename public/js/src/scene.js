@@ -46,7 +46,17 @@ export class Scene {
       /*this.socket = io.connect('http://localhost:3000');*/
       this.export = false; //Not really working
       this.stop_on_next = false;
-      this.hide_controls = true;
+
+      // Check for devmode URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const devmode = urlParams.get('devmode') === 'true';
+      this.hide_controls = !devmode;
+
+      // Update version display from build-time environment variable
+      const versionElement = document.getElementById('version');
+      if (versionElement) {
+        versionElement.textContent = `v${import.meta.env.VITE_VERSION}`;
+      }
 
       //Scene variables
       this.container = document.getElementById('container');

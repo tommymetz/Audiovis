@@ -94,6 +94,13 @@ npm run dev:server
 ```
 Runs the Express server on port 3001
 
+### Dev Mode
+
+Enable developer mode (shows stats and control panels) by adding `?devmode=true` to the URL:
+- `http://localhost:3001/?devmode=true` (when using `npm start`)
+
+**Note:** Dev mode only works when running the application via `npm start` (the Express/production server). It is not available when using `npm run dev` (Vite dev server).
+
 ## Audio Processing
 
 The project includes Python-based audio analysis tools:

@@ -1,5 +1,9 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import fs from 'fs';
+
+// Read package.json once at startup for better performance
+const packageJson = JSON.parse(fs.readFileSync(resolve(__dirname, 'package.json'), 'utf8'));
 
 export default defineConfig({
   root: 'public',
@@ -24,5 +28,9 @@ export default defineConfig({
   },
   css: {
     devSourcemap: true,
+  },
+  // Inject version from package.json as environment variable
+  define: {
+    'import.meta.env.VITE_VERSION': JSON.stringify(packageJson.version),
   },
 });
