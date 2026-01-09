@@ -29,21 +29,8 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  // Plugin to serve package.json in dev mode
-  plugins: [
-    {
-      name: 'serve-package-json',
-      configureServer(server) {
-        server.middlewares.use((req, res, next) => {
-          if (req.url === '/package.json') {
-            res.setHeader('Content-Type', 'application/json');
-            // Only serve version field to avoid exposing sensitive information
-            res.end(JSON.stringify({ version: packageJson.version }));
-          } else {
-            next();
-          }
-        });
-      },
-    },
-  ],
+  // Inject version from package.json as environment variable
+  define: {
+    'import.meta.env.VITE_VERSION': JSON.stringify(packageJson.version),
+  },
 });

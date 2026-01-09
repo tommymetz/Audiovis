@@ -17,14 +17,6 @@ server.listen(3001);
 console.log('Express server running on http://localhost:3001');
 console.log('For development, use: npm run dev (Vite on port 3000)');
 
-// API endpoint to provide app info
-app.get('/api/app-info', function (req, res) {
-  res.json({
-    version: APP_VERSION,
-    productionMode: true // This indicates we're running via Express server (npm run start)
-  });
-});
-
 app.get('/', function (req, res) {
   // Serve from dist in production, or use Vite dev server in development
   const indexPath = fs.existsSync(__dirname + '/dist/index.html') 
