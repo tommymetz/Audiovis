@@ -35,11 +35,6 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] 2.1.1 Remove dependency on global THREE namespace
   - [x] 2.1.2 Properly import Three.js modules
   - [x] 2.1.3 Update HTML to use module script tag
-- [ ] **2.2 Optimize Asset Pipeline**
-  - [ ] 2.2.0 Configure Vite to handle SCSS natively
-  - [ ] 2.2.1 Enable tree shaking for unused code removal
-  - [ ] 2.2.2 Set up code splitting for better performance
-  - [ ] 2.2.3 Implement proper asset optimization (images, fonts)
 
 ### Phase 3: Code Quality & Modern JavaScript
 - [ ] **3.0 Migrate to ESLint**
