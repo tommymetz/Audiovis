@@ -4,10 +4,6 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const fs = require('fs');
 
-// Read package.json for version
-const packageJson = JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8'));
-const APP_VERSION = packageJson.version;
-
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 // Serve from dist in production, or public as fallback
