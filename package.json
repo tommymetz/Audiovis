@@ -1,6 +1,6 @@
 {
   "name": "audiovis",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "dependencies": {
     "dat.gui": "^0.7.9",
     "express": "^4.22.1",
@@ -21,7 +21,10 @@
     "start": "npm run build && node index.js"
   },
   "devDependencies": {
-    "vite": "^7.3.1"
+    "sharp": "^0.34.5",
+    "terser": "^5.44.1",
+    "vite": "^7.3.1",
+    "vite-plugin-image-optimizer": "^2.0.3"
   },
   "overrides": {
     "debug": ">=4.3.1"
