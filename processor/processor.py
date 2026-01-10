@@ -23,6 +23,7 @@ def processor(fs, xchunk, analysis, plot):
     	x: input array sound, w: analysis window, N: FFT size, H: hop size
     	returns xmX, xpX: magnitude and phase spectra
     	"""
+        # 'hann' is the scipy name for Hanning window (scipy >= 1.1 deprecated 'hanning')
         window = 'hann'
         M = 2048    # window size 512, 1024, 2048, 4096
         N = 2048    # fft size
