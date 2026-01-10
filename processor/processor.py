@@ -1,14 +1,10 @@
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import get_window
-#toolsdir = '/Users/tometz/Documents/MachineLearningStuff/SignalProcessingForMusicApplications/sms-tools/software/models/'
-toolsdir = '/Users/tometz/Documents/Audio/TomWav/_analysis/processor/'
-sys.path.insert(0, toolsdir)
-import stft as STFT
-import hprModel as HPR
-import sineModel as SM
-import harmonicModel as HM
+from smstools.models import stft as STFT
+from smstools.models import hprModel as HPR
+from smstools.models import sineModel as SM
+from smstools.models import harmonicModel as HM
 
 # ////////////////////////////////////////////////////////////
 # processor //////////////////////////////////////////////////
@@ -27,7 +23,7 @@ def processor(fs, xchunk, analysis, plot):
     	x: input array sound, w: analysis window, N: FFT size, H: hop size
     	returns xmX, xpX: magnitude and phase spectra
     	"""
-        window = 'hanning'
+        window = 'hann'
         M = 2048    # window size 512, 1024, 2048, 4096
         N = 2048    # fft size
         H = 512     # hop

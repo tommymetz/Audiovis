@@ -25,9 +25,6 @@ __pycache__/
 # Cython compiled modules
 *.so
 *.pyd
-*.c
-processor/processor/utilFunctions_C/build/
-processor/processor/utilFunctions_C/utilFunctions_C.*
 
 # IDE
 .vscode/

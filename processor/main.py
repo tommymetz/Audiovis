@@ -10,9 +10,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import get_window
-toolsdir = '/Users/tometz/Documents/Clients/Audiovis/processor/processor/'
-sys.path.insert(0, toolsdir)
-import utilFunctions as UF
+from smstools.models import utilFunctions as UF
 
 from analysis import analysis
 from worker_processor import worker_processor
