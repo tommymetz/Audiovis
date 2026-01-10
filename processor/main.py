@@ -21,66 +21,65 @@ from kmeans import kmeans
 from vector_quantize import vector_quantize
 #from worker_vector_quantize import worker_vector_quantize
 
-# get all files with .wav extention
-thename = 'SlowlyForget'
-# TheFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
-TheFolder = '/Users/tometz/Documents/Clients/Audiovis/stems/' + thename + '/'
-TheDestFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
-masterfile = thename + '.wav'
-masterfilestring = masterfile
-if masterfile.endswith('.wav'):
-    masterfilestring = masterfile[:-4]
+def analyze():
 
-startingpos = 0 #seconds 92, 95
-writemp3 = True
-audiofiles = []
-files = [f for f in os.listdir(TheFolder) if os.path.isfile(TheFolder + f)]
-count = 0
-limit = 100
-skipcount = 10
-for i in files:
-    if i.endswith('.wav'):
-        if i != masterfile:
-            if count < limit:
-                if i.startswith(masterfilestring): #if not i.endswith('.l.wav') and not i.endswith('.r.wav') and i.endswith('.wav'):
-                    audiofiles.append(i)
-                    count += 1
+    # get all files with .wav extention
+    thename = 'SlowlyForget'
+    # TheFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
+    TheFolder = '/Users/tometz/Documents/Clients/Audiovis/stems/' + thename + '/'
+    TheDestFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
+    masterfile = thename + '.wav'
+    masterfilestring = masterfile
+    if masterfile.endswith('.wav'):
+        masterfilestring = masterfile[:-4]
 
-# save list of audio files to json file
-data = []
-data.append({
-    'mp3file': masterfile[:-4] + '.mp3',
-    'audiofiles':audiofiles
-})
-with open(TheDestFolder + '_analysis_files.json', 'w') as outfile:
-    json.dump(data, outfile)
+    startingpos = 0 #seconds 92, 95
+    writemp3 = True
+    audiofiles = []
+    files = [f for f in os.listdir(TheFolder) if os.path.isfile(TheFolder + f)]
+    count = 0
+    limit = 100
+    skipcount = 10
+    for i in files:
+        if i.endswith('.wav'):
+            if i != masterfile:
+                if count < limit:
+                    if i.startswith(masterfilestring): #if not i.endswith('.l.wav') and not i.endswith('.r.wav') and i.endswith('.wav'):
+                        audiofiles.append(i)
+                        count += 1
 
-audiofiles = audiofiles[skipcount:]
-print(audiofiles)
-#quit()
+    # save list of audio files to json file
+    data = []
+    data.append({
+        'mp3file': masterfile[:-4] + '.mp3',
+        'audiofiles':audiofiles
+    })
+    with open(TheDestFolder + '_analysis_files.json', 'w') as outfile:
+        json.dump(data, outfile)
 
-# create trimmed version of master file
-editfile = TheFolder + masterfilestring + '_edit.wav'
-soxcommand = ['sox', TheFolder + masterfile, editfile, 'trim', str(startingpos)]
-if writemp3:
-    outleft = check_output(soxcommand)
+    audiofiles = audiofiles[skipcount:]
+    print(audiofiles)
+    #quit()
 
-# create mp3 - lame -b128 sample.wav sample.mp3, lame --abr 100 Details.wav Details.mp3
-mp3file = masterfile
-if mp3file.endswith('.wav'):
-    mp3file = mp3file[:-4]
-mp3file = TheDestFolder + mp3file + '.mp3'
-lamecommand = ['lame', '--abr', '100', editfile, mp3file]
-if writemp3:
-    outleft = check_output(lamecommand)
+    # create trimmed version of master file
+    editfile = TheFolder + masterfilestring + '_edit.wav'
+    soxcommand = ['sox', TheFolder + masterfile, editfile, 'trim', str(startingpos)]
+    if writemp3:
+        outleft = check_output(soxcommand)
 
-# delete edit file
-os.remove(editfile)
+    # create mp3 - lame -b128 sample.wav sample.mp3, lame --abr 100 Details.wav Details.mp3
+    print('LAME')
+    mp3file = masterfile
+    if mp3file.endswith('.wav'):
+        mp3file = mp3file[:-4]
+    mp3file = TheDestFolder + mp3file + '.mp3'
+    lamecommand = ['lame', '--abr', '100', editfile, mp3file]
+    if writemp3:
+        outleft = check_output(lamecommand)
 
-# ////////////////////////////////////////////////////////////
-# iterator ///////////////////////////////////////////////////
-# ////////////////////////////////////////////////////////////
-def iterator():
+    # delete edit file
+    os.remove(editfile)
+    
     for filename in audiofiles:
 
         # seperate stereo files int left and right wav files
@@ -266,7 +265,7 @@ def iterator():
 
 # run iterator
 if __name__ == '__main__':
-    iterator()
+    analyze()
 
 
 
