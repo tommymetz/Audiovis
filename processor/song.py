@@ -5,7 +5,7 @@
 #
 
 def song():
-    print 'song'
+    print('song')
 
 song()
 

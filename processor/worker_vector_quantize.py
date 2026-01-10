@@ -21,7 +21,7 @@ def worker_vector_quantize(i, centroidcount, stftsamples_normalized, centroids, 
     smallest = distances.index(min(distances))
     return_dict[i] = smallest
 
-    print 'worker_vector_quantize', i, '/', len(stftsamples_normalized)
+    print('worker_vector_quantize', i, '/', len(stftsamples_normalized))
 
 
 

@@ -9,14 +9,14 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), './uti
 try:
 	import utilFunctions_C as UF_C
 except ImportError:
-	print "\n"
-	print "-------------------------------------------------------------------------------"
-	print "Warning:"
-	print "Cython modules for some of the core functions were not imported."
-	print "Please refer to the README.md file in the 'sms-tools' directory, for the instructions to compile the cython modules"
-	print "Exiting the code!!"
-	print "-------------------------------------------------------------------------------"
-	print "\n"
+	print("\n")
+	print("-------------------------------------------------------------------------------")
+	print("Warning:")
+	print("Cython modules for some of the core functions were not imported.")
+	print("Please refer to the README.md file in the 'sms-tools' directory, for the instructions to compile the cython modules")
+	print("Exiting the code!!")
+	print("-------------------------------------------------------------------------------")
+	print("\n")
 	sys.exit(0)
 	
 winsound_imported = False	
@@ -25,7 +25,7 @@ if sys.platform == "win32":
 		import winsound
 		winsound_imported = True
 	except:
-		print "You won't be able to play sounds, winsound could not be imported"
+		print("You won't be able to play sounds, winsound could not be imported")
 
 def isPower2(num):
 	"""

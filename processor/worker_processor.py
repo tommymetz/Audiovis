@@ -224,7 +224,7 @@ def worker_processor(filename, fs, fps, x, x2, i, chunkcount, chunklen, totallen
     return_dict_volume[origi] = volume
     return_dict_balance[origi] = balance
     return_dict_width[origi] = width
-    print filename, 'worker', origi, '/', chunkcount
+    print(filename, 'worker', origi, '/', chunkcount)
     #print('stftsamples', stftsamples[0][0]);
     #plt.plot(stftsamples[0])
     #plt.yscale('log')

@@ -22,7 +22,7 @@ def worker_kmeans_assign(j, centroidcount, stftsamples_normalized, centroids, re
     #find closest centroid to this sample point and assign it
     return_dict[j] = distances.index(min(distances))
 
-    print 'worker_kmeans_assign', j, '/', len(stftsamples_normalized)
+    print('worker_kmeans_assign', j, '/', len(stftsamples_normalized))
 
 
 

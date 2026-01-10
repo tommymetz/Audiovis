@@ -67,7 +67,7 @@ def kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized,stft
             proc.join()
 
         centroidassignments = return_dict.values()
-        print 'assign-samples'
+        print('assign-samples')
 
         #assign samples to a centroid
         '''for j in range(len(stftsamples_normalized_downsized)):
@@ -85,7 +85,7 @@ def kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized,stft
             centroidindex = distances.index(min(distances))
             centroidassignments[j] = centroidindex
             #print 'distances', i, distances[centroidassignments[j]]
-            print filename, 'kmeans assign', j, '/', len(stftsamples_normalized_downsized)'''
+            print(filename, 'kmeans assign', j, '/', len(stftsamples_normalized_downsized))'''
 
 
         # //////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ def kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized,stft
                 if assignmentcount != 0:
                     centroids[j][k] = newcentroid[k]
 
-            print 'kmeans update', j, '/', centroidcount
+            print('kmeans update', j, '/', centroidcount)
 
         #print 'diffsum', i, differencesum
         return centroids

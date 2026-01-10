@@ -48,7 +48,7 @@ def vector_quantize(sleepdelay, stftsamples_normalized, centroidcount, centroids
             dist = math.log10(stftsamples_normalized[i][k]) - math.log10(centroids[j][k])
             distance += pow(abs(dist), 2)
         distances.append(distance)
-    print filename, 'kmeans vq assign', i, '/', len(stftsamples)
+    print(filename, 'kmeans vq assign', i, '/', len(stftsamples))
 
     smallest = distances.index(min(distances))
     stftvqarray.append(smallest)'''

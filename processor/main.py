@@ -10,8 +10,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import get_window
-#toolsdir = '/Users/tometz/Documents/MachineLearningStuff/SignalProcessingForMusicApplications/sms-tools/software/models/'
-toolsdir = '/Users/tometz/Documents/Audio/TomWav/_audiovis/processor/processor/'
+toolsdir = '/Users/tometz/Documents/Clients/Audiovis/processor/processor/'
 sys.path.insert(0, toolsdir)
 import utilFunctions as UF
 
@@ -26,7 +25,9 @@ from vector_quantize import vector_quantize
 
 # get all files with .wav extention
 thename = 'SlowlyForget'
-TheFolder = '/Users/tometz/Documents/Audio/TomWav/_audiovis/public/content/' + thename + '/'
+# TheFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
+TheFolder = '/Users/tometz/Documents/Clients/Audiovis/stems/' + thename + '/'
+TheDestFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
 masterfile = thename + '.wav'
 masterfilestring = masterfile
 if masterfile.endswith('.wav'):
@@ -53,11 +54,11 @@ data.append({
     'mp3file': masterfile[:-4] + '.mp3',
     'audiofiles':audiofiles
 })
-with open(TheFolder + '_analysis_files.json', 'w') as outfile:
+with open(TheDestFolder + '_analysis_files.json', 'w') as outfile:
     json.dump(data, outfile)
 
 audiofiles = audiofiles[skipcount:]
-print audiofiles
+print(audiofiles)
 #quit()
 
 # create trimmed version of master file
@@ -70,7 +71,7 @@ if writemp3:
 mp3file = masterfile
 if mp3file.endswith('.wav'):
     mp3file = mp3file[:-4]
-mp3file = TheFolder + mp3file + '.mp3'
+mp3file = TheDestFolder + mp3file + '.mp3'
 lamecommand = ['lame', '--abr', '100', editfile, mp3file]
 if writemp3:
     outleft = check_output(lamecommand)
@@ -129,7 +130,7 @@ def iterator():
             stftvqarray = vector_quantize(sleepdelay, stftsamples_normalized, centroidcount, centroids)
 
         else:
-            print 'all quite samples'
+            print('all quiet samples')
             allquietsamples = True
             #sys.exit('all quiet samples')
 
@@ -237,13 +238,13 @@ def iterator():
                 'allquietsamples':allquietsamples
             }
 
-        with open(TheFolder + filename+'_analysis.json', 'w') as outfile:
+        with open(TheDestFolder + filename+'_analysis.json', 'w') as outfile:
             json.dump(data, outfile, sort_keys=True)
 
         # compile data byte array and write to file
         if not allquietsamples:
             combined_lists = volumes + balances + widths + flat_stft_clusters + stftvqarray + harmonicsamplessinglearray
-            fileobj = open(TheFolder + filename + '_analysis.data', mode='wb')
+            fileobj = open(TheDestFolder + filename + '_analysis.data', mode='wb')
             off = np.array(combined_lists, dtype=np.uint16)
             off.tofile(fileobj)
             fileobj.close()
@@ -340,7 +341,7 @@ if len(nonquietsamples) > 0:
                 proc.join()
 
         centroidassignments = return_dict.values()
-        print 'assign-samples'
+        print('assign-samples')
 
 
         #assign samples to a centroid
@@ -359,7 +360,7 @@ if len(nonquietsamples) > 0:
             centroidindex = distances.index(min(distances))
             centroidassignments[j] = centroidindex
             #print 'distances', i, distances[centroidassignments[j]]
-            print filename, 'kmeans assign', j, '/', len(stftsamples_normalized_downsized)
+            print(filename, 'kmeans assign', j, '/', len(stftsamples_normalized_downsized))
 
 
 
@@ -409,7 +410,7 @@ if len(nonquietsamples) > 0:
                 if assignmentcount != 0:
                     centroids[j][k] = newcentroid[k]
 
-            print filename, 'kmeans update', j, '/', centroidcount'''
+            print(filename, 'kmeans update', j, '/', centroidcount)'''
 
         #print 'diffsum', i, differencesum
 
