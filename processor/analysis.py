@@ -14,7 +14,7 @@ def analysis(filename, sleepdelay, fs, fps, x, x2):
     chunkseconds = 2 #seconds
 
     chunklen = fs*chunkseconds
-    chunkcount = totallen / chunklen
+    chunkcount = totallen // chunklen
     lastlen = totallen - (chunkcount*chunklen)
 
     # sfft multiprocessing - process x frames in chunks on different processes
