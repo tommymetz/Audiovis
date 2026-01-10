@@ -267,7 +267,8 @@ def iterator():
     return
 
 # run iterator
-iterator()
+if __name__ == '__main__':
+    iterator()
 
 
 

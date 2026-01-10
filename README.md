@@ -50,7 +50,19 @@ npm install
 pip install -r requirements.txt
 ```
 
-4. Convert audio files to MP3 (if needed):
+4. Compile Cython modules for optimized audio processing:
+```bash
+cd processor/processor/utilFunctions_C
+python compileModule.py build_ext --inplace
+cd ../../..
+```
+
+**Note:** The Cython modules provide performance-critical functions for spectral analysis. If compilation fails, ensure you have a C compiler installed:
+- **macOS**: Install Xcode Command Line Tools (`xcode-select --install`)
+- **Linux**: Install gcc/build-essential
+- **Windows**: Install Microsoft Visual C++ Build Tools
+
+5. Convert audio files to MP3 (if needed):
 ```bash
 cd public/content
 lame --abr 90 Details/Details.wav Details/Details.mp3
@@ -122,6 +134,8 @@ npm run analysis
 ```
 
 These scripts are located in the `processor/` directory and handle spectral analysis and audio feature extraction.
+
+**Troubleshooting:** If you see a warning about missing Cython modules when running `npm run analysis`, you need to compile the Cython modules first (see step 4 in Installation).
 
 ## Project Structure
 
