@@ -27,6 +27,9 @@ Horizon is an interactive audio-visual experience that combines Three.js 3D grap
 
 - Node.js (v20 or higher)
 - Python (for audio processing)
+  - numpy
+  - scipy
+  - matplotlib
 - LAME encoder (for MP3 conversion)
 
 ## Installation
@@ -42,7 +45,12 @@ cd Audiovis_1.0_Horizon
 npm install
 ```
 
-3. Convert audio files to MP3 (if needed):
+3. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Convert audio files to MP3 (if needed):
 ```bash
 cd public/content
 lame --abr 90 Details/Details.wav Details/Details.mp3
