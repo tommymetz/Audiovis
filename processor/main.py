@@ -1,25 +1,14 @@
 import os
-import sys
-import math
-from random import randint
-from decimal import Decimal
-from subprocess import check_output
-from multiprocessing import Process, Manager
-from time import sleep
 import json
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.signal import get_window
+from subprocess import check_output
 from smstools.models import utilFunctions as UF
 
 from analysis import analysis
-from worker_processor import worker_processor
 
 from kmeans import kmeans
-#from worker_kmeans_assign import worker_kmeans_assign
 
 from vector_quantize import vector_quantize
-#from worker_vector_quantize import worker_vector_quantize
 
 def analyze():
 
