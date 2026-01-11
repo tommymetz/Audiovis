@@ -41,13 +41,13 @@ def analysis(filename, fs, fps, x, x2):
     # //////////////////////////////////////////////////////////////////////
 
     # get chunks
-    stftchunks = return_dict_stft.values()
-    stftchunks2 = return_dict_stft2.values()
-    harmonicchunks = return_dict_harmonic.values()
+    stftchunks = list(return_dict_stft.values())
+    stftchunks2 = list(return_dict_stft2.values())
+    harmonicchunks = list(return_dict_harmonic.values())
     #residchunks = return_dict_resid.values()
-    volumechunks = return_dict_volume.values()
-    balancechunks = return_dict_balance.values()
-    widthchuncks = return_dict_width.values()
+    volumechunks = list(return_dict_volume.values())
+    balancechunks = list(return_dict_balance.values())
+    widthchuncks = list(return_dict_width.values())
 
     # convert stft chunks into single 2x multi-dim array
     stftsamples = []
