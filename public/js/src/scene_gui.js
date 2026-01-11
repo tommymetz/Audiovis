@@ -1,7 +1,6 @@
 export class SceneGui {
 
-  constructor(parent){
-    const mythis = this;
+  constructor(parent) {
     this.parent = parent;
     this.visible = false;
     this.paused = false;
@@ -16,13 +15,13 @@ export class SceneGui {
     this.parent.container.appendChild(this.container);
     this.container.setAttribute('class', 'scene-gui gui-container hidden');
 
-      //Menu Bar
-      this.menu = document.createElement('div');
-      this.container.appendChild(this.menu);
-      this.menu.setAttribute('class', 'gui-menu');
+    //Menu Bar
+    this.menu = document.createElement('div');
+    this.container.appendChild(this.menu);
+    this.menu.setAttribute('class', 'gui-menu');
 
-        //Playlist Title
-        /*this.title = document.createElement('div');
+    //Playlist Title
+    /*this.title = document.createElement('div');
         this.menu.appendChild(this.title);
         this.title.setAttribute('class', 'gui-item gui-item_title hidden');
 
@@ -36,49 +35,49 @@ export class SceneGui {
         this.menu.appendChild(this.status);
         this.status.setAttribute('class', 'gui-item gui-item_status');*/
 
-        //Stop Play
-        this.button_stopplay = document.createElement('a');
-        this.menu.appendChild(this.button_stopplay);
-        this.button_stopplay.setAttribute('class', 'gui-item');
-        this.button_stopplay.setAttribute('href', '#');
-        this.button_stopplay.innerHTML = 'stop';
+    //Stop Play
+    this.button_stopplay = document.createElement('a');
+    this.menu.appendChild(this.button_stopplay);
+    this.button_stopplay.setAttribute('class', 'gui-item');
+    this.button_stopplay.setAttribute('href', '#');
+    this.button_stopplay.innerHTML = 'stop';
 
-        //Fast Forward
-        this.button_fastforward = document.createElement('a');
-        this.menu.appendChild(this.button_fastforward);
-        this.button_fastforward.setAttribute('class', 'gui-item');
-        this.button_fastforward.setAttribute('href', '#');
-        this.button_fastforward.innerHTML = 'ff';
+    //Fast Forward
+    this.button_fastforward = document.createElement('a');
+    this.menu.appendChild(this.button_fastforward);
+    this.button_fastforward.setAttribute('class', 'gui-item');
+    this.button_fastforward.setAttribute('href', '#');
+    this.button_fastforward.innerHTML = 'ff';
 
-        //Next Song
-        this.button_nextsong = document.createElement('a');
-        this.menu.appendChild(this.button_nextsong);
-        this.button_nextsong.setAttribute('class', 'gui-item');
-        this.button_nextsong.setAttribute('href', '#');
-        this.button_nextsong.innerHTML = 'next';
+    //Next Song
+    this.button_nextsong = document.createElement('a');
+    this.menu.appendChild(this.button_nextsong);
+    this.button_nextsong.setAttribute('class', 'gui-item');
+    this.button_nextsong.setAttribute('href', '#');
+    this.button_nextsong.innerHTML = 'next';
 
-        //Buy
-        this.button_buy = document.createElement('a');
-        this.menu.appendChild(this.button_buy);
-        this.button_buy.setAttribute('class', 'gui-item');
-        this.button_buy.setAttribute('href', 'http://multidim.net/releases/horizon');
-        this.button_buy.setAttribute('target', '_blank');
-        this.button_buy.innerHTML = 'get';
+    //Buy
+    this.button_buy = document.createElement('a');
+    this.menu.appendChild(this.button_buy);
+    this.button_buy.setAttribute('class', 'gui-item');
+    this.button_buy.setAttribute('href', 'http://multidim.net/releases/horizon');
+    this.button_buy.setAttribute('target', '_blank');
+    this.button_buy.innerHTML = 'get';
 
-      //Stems - https://github.com/RubaXa/Sortable
-      /*this.stems = [];
+    //Stems - https://github.com/RubaXa/Sortable
+    /*this.stems = [];
       this.stems_list = document.createElement('ul');
       this.container.appendChild(this.stems_list);
       this.stems_list.setAttribute('class', 'gui-list');*/
 
-      //Song Title
-      this.song_title = document.createElement('div');
-      this.container.appendChild(this.song_title);
-      this.song_title.setAttribute('class', 'gui-song-title');
-      this.song_title.innerHTML = 'Glissline - Horizon';
+    //Song Title
+    this.song_title = document.createElement('div');
+    this.container.appendChild(this.song_title);
+    this.song_title.setAttribute('class', 'gui-song-title');
+    this.song_title.innerHTML = 'Glissline - Horizon';
   }
 
-  init(){
+  init() {
     const mythis = this;
     this.updateVisibility(true);
 
@@ -100,48 +99,48 @@ export class SceneGui {
   }
 
 
-  updateSongTitle(title){
+  updateSongTitle(title) {
     this.song_title.innerHTML = title;
   }
 
-  updateStopPlayButtonState(paused){
-    if(!paused){
+  updateStopPlayButtonState(paused) {
+    if (!paused) {
       this.button_stopplay.innerHTML = 'stop';
       this.paused = false;
-    }else{
+    } else {
       this.button_stopplay.innerHTML = 'play';
       this.paused = true;
     }
   }
 
-  updateVisibility(visible){
+  updateVisibility(visible) {
     this.visible = visible;
-    if(visible){
+    if (visible) {
       this.container.classList.remove('hidden');
-    }else{
+    } else {
       this.container.classList.add('hidden');
     }
   }
 
-  stopplay(){
-    if(this.paused){
+  stopplay() {
+    if (this.paused) {
       this.button_stopplay.innerHTML = 'stop';
       this.paused = false;
-    }else{
+    } else {
       this.button_stopplay.innerHTML = 'play';
       this.paused = true;
     }
     this.parent.stopplay();
   }
 
-  fastforward(){
+  fastforward() {
     this.button_stopplay.innerHTML = 'stop';
     this.paused = false;
     document.getElementById('playdiv').style.display = 'none';
     this.parent.fastforward();
   }
 
-  nextsong(){
+  nextsong() {
     this.button_stopplay.innerHTML = 'stop';
     this.paused = false;
     document.getElementById('playdiv').style.display = 'none';
@@ -154,7 +153,7 @@ export class SceneGui {
 
   //saveState(){
   //  console.log('save scene');
-    /*var mythis = this;
+  /*var mythis = this;
     this.status.innerHTML = 'saving';
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {

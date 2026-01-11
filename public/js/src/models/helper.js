@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 export class Helper {
   constructor(scene, stem) {
-    const mythis = this;
     this.scene = scene;
     this.stem = stem;
     this.initHelper();
@@ -35,9 +34,6 @@ export class Helper {
   updateHelper() {
 
   }
-
-
-
 
 
   //

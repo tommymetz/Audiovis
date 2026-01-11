@@ -15,7 +15,7 @@ console.log('For development, use: npm run dev (Vite on port 3000)');
 
 app.get('/', function (req, res) {
   // Serve from dist in production, or use Vite dev server in development
-  const indexPath = fs.existsSync(__dirname + '/dist/index.html') 
+  const indexPath = fs.existsSync(__dirname + '/dist/index.html')
     ? __dirname + '/dist/index.html'
     : __dirname + '/public/index.html';
   res.sendFile(indexPath);
@@ -26,7 +26,7 @@ app.post('/config/save', function (req, res) {
   //console.log(req.body);
 
   const json = JSON.stringify(req.body);
-  fs.writeFile(__dirname + '/public/' + req.body.location + '_config.json', json, 'utf8', (error) => {
+  fs.writeFile(__dirname + '/public/' + req.body.location + '_config.json', json, 'utf8', (_error) => {
     res.json(req.body);
   });
 });
@@ -34,8 +34,8 @@ app.post('/config/save', function (req, res) {
 io.on('connection', function (socket) {
   socket.on('render-frame', function (data) {
     data.file = data.file.split(',')[1]; // Get rid of the data:image/png;base64 at the beginning of the file data
-    var buffer = Buffer.from(data.file, 'base64');
-    fs.writeFile(__dirname + '/public/tmp/frame-' + data.frame + '.png', buffer.toString('binary'), 'binary', (error) => {
+    const buffer = Buffer.from(data.file, 'base64');
+    fs.writeFile(__dirname + '/public/tmp/frame-' + data.frame + '.png', buffer.toString('binary'), 'binary', (_error) => {
       //console.log('error');
     });
   });

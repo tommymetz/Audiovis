@@ -37,12 +37,12 @@ This document outlines the modernization roadmap and future development plans fo
   - [x] 2.1.3 Update HTML to use module script tag
 
 ### Phase 3: Code Quality & Modern JavaScript
-- [ ] **3.0 Migrate to ESLint**
-  - [ ] 3.0.0 Remove JSHint configuration
-  - [ ] 3.0.1 Install ESLint with modern presets (airbnb or standard)
-  - [ ] 3.0.2 Configure ESLint rules appropriate for the project
-  - [ ] 3.0.3 Fix all linting errors and warnings
-  - [ ] 3.0.4 Add ESLint to pre-commit hooks
+- [x] **3.0 Migrate to ESLint**
+  - [x] 3.0.0 Remove JSHint configuration (not present - already done in Phase 2)
+  - [x] 3.0.1 Install ESLint with modern presets (using @eslint/js recommended rules)
+  - [x] 3.0.2 Configure ESLint rules appropriate for the project
+  - [x] 3.0.3 Fix all linting errors and warnings
+  - [x] 3.0.4 Add ESLint to pre-commit hooks (husky + lint-staged)
 - [ ] **3.1 Add Prettier for code formatting**
   - [ ] 3.1.0 Install Prettier
   - [ ] 3.1.1 Configure .prettierrc with team preferences

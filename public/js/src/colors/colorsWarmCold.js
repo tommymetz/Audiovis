@@ -42,7 +42,7 @@ export function getColorSet(name) {
   return colorRegistry[name] || colorsWarmCold;
 }
 
-  /*this.colors = [
+/*this.colors = [
     0x6F256F,
     0x530E53,
     0x9D344B,
@@ -61,7 +61,7 @@ export function getColorSet(name) {
     0x8A458A,
     0xC56277
   ];*/
-  /*this.colors = [
+/*this.colors = [
     Math.random() * 0xffffff,
     Math.random() * 0xffffff,
     Math.random() * 0xffffff,

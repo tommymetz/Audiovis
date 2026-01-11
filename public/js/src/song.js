@@ -4,7 +4,7 @@ import { Stem } from './stem.js';
 import { getColorSet } from './colors/colorsWarmCold.js';
 
 export class Song {
-  constructor(parent, location, songjsonfile, attributesjson, scene, audiolistener, fps, hide_controls=false) {
+  constructor(parent, location, songjsonfile, attributesjson, scene, audiolistener, fps, hide_controls = false) {
     const mythis = this;
     this.parent = parent;
     this.location = location;
@@ -42,7 +42,7 @@ export class Song {
 
     //onLoaded handler
     this.isLoaded = function() {
-      if(typeof this.onLoaded === "function"){
+      if (typeof this.onLoaded === 'function') {
         this.loaded = true;
         this.gui.init();
         this.onLoaded();
@@ -63,26 +63,26 @@ export class Song {
         mythis.attributes = json;
 
         //Colors
-        if(mythis.attributes.colors.length == 0){
+        if (mythis.attributes.colors.length === 0) {
 
           //Populate with colorset
           let colorindex = 0;
-          let colorset = getColorSet(mythis.attributes.colorset);
-          mythis.stemnames.forEach(function(element, index){
+          const colorset = getColorSet(mythis.attributes.colorset);
+          mythis.stemnames.forEach(function(element, index) {
             mythis.colors.push(colorset[colorindex]);
             colorindex++;
-            if(index == colorset.length-1) colorindex = 0;
+            if (index === colorset.length - 1) colorindex = 0;
           });
-        }else{
+        } else {
           mythis.colors = mythis.attributes.colors;
         }
 
         //Order
-        if(mythis.attributes.order.length == 0){
-          mythis.stemnames.forEach(function(element, index){
+        if (mythis.attributes.order.length === 0) {
+          mythis.stemnames.forEach(function(_element, index) {
             mythis.order.push(index);
           });
-        }else{
+        } else {
           mythis.order = mythis.attributes.order;
         }
 
@@ -92,9 +92,9 @@ export class Song {
           mythis.audiotrack.setBuffer( audioBuffer );
           mythis.audiotrack.setLoop(false);
           mythis.audiotrack.setVolume(1.0);
-          mythis.audiotrack.onEnded = function(){
-            if(!mythis.ignoreending){
-              if(mythis.visible){
+          mythis.audiotrack.onEnded = function() {
+            if (!mythis.ignoreending) {
+              if (mythis.visible) {
                 mythis.updateVisibility(false);
                 mythis.parent.nextsong();
               }
@@ -102,7 +102,7 @@ export class Song {
           };
 
           //Create stems
-          for(let i=0; i<mythis.stemnames.length; i++){
+          for (let i = 0; i < mythis.stemnames.length; i++) {
             mythis.stems[i] = mythis.createStem(mythis.stemnames[i], i, mythis.order[i]);
           }
         });
@@ -119,50 +119,50 @@ export class Song {
 
       //If all stems are loaded
       let loaded = true;
-      for(let j=0; j<mythis.stemnames.length; j++){
-        if(!mythis.stems[j].loaded){
+      for (let j = 0; j < mythis.stemnames.length; j++) {
+        if (!mythis.stems[j].loaded) {
           loaded = false;
         }
       }
-      if(loaded){
+      if (loaded) {
         mythis.isLoaded();
       }
-    }
+    };
     return thestem;
   }
 
   //////////////////////////////////////////////////////////////////////////////
   //VISUALS/////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
-  updateVisibility(visible){
+  updateVisibility(visible) {
     this.visible = visible;
-    if(this.hide_controls){
+    if (this.hide_controls) {
       this.gui.updateVisibility(false);
-    }else{
+    } else {
       this.gui.updateVisibility(visible);
     }
-    for(let i=0; i<this.stemnames.length; i++){
+    for (let i = 0; i < this.stemnames.length; i++) {
       this.stems[i].updateVisibility(visible);
     }
   }
 
-  updateStemOrder(order){
-    for(let i=0; i<this.stemnames.length; i++){
+  updateStemOrder(order) {
+    for (let i = 0; i < this.stemnames.length; i++) {
       this.stems[i].updateOrder(order[i]);
     }
   }
 
-  updateStemColor(which, color){
+  updateStemColor(which, color) {
     this.stems[which].updateColors(color);
   }
 
-  updateSoloing(which, checked){
-    if(checked){
-      this.stems.forEach(function(element, index){
-        if(which != index) element.hide();
+  updateSoloing(which, checked) {
+    if (checked) {
+      this.stems.forEach(function(element, index) {
+        if (which !== index) element.hide();
       });
-    }else{
-      this.stems.forEach(function(element, index){
+    } else {
+      this.stems.forEach(function(element) {
         element.show();
       });
     }
@@ -172,12 +172,11 @@ export class Song {
   //PLAYBACK////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   play(offset = 0) {
-    var mythis = this;
     this.offset = offset;
     this.offsetframes = this.offset * this.fps;
 
     //Playback
-    if(this.audiotrack.isPlaying) this.audiotrack.stop();
+    if (this.audiotrack.isPlaying) this.audiotrack.stop();
     this.audiotrack.offset = this.offset;
     this.audiotrack.play();
     // Capture the audio context time when play is called
@@ -185,19 +184,19 @@ export class Song {
     this.updateVisibility(true);
   }
 
-  stop(){
+  stop() {
     this.updateVisibility(false);
-    if(this.audiotrack.isPlaying) this.audiotrack.stop();
+    if (this.audiotrack.isPlaying) this.audiotrack.stop();
   }
 
-  fastforward(){
-    var mythis = this;
+  fastforward() {
+    const mythis = this;
     this.ignoreending = true;
-    var time = this.audiotrack.context.currentTime + this.audiotrack.offset + 5;
-    if(time < this.audiotrack.buffer.duration){
+    const time = this.audiotrack.context.currentTime + this.audiotrack.offset + 5;
+    if (time < this.audiotrack.buffer.duration) {
       this.play(time);
-      setTimeout(function(){ mythis.ignoreending = false; }, 10); //Revert after ending fired
-    }else{
+      setTimeout(function() { mythis.ignoreending = false; }, 10); //Revert after ending fired
+    } else {
       this.updateVisibility(false);
       this.parent.nextsong();
     }
@@ -207,16 +206,16 @@ export class Song {
   //ANIMATE/////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   updateAnimation() {
-    if(this.visible){
-      var audioframe = (this.audiotrack.context.currentTime - this.starttime) * this.fps;
+    if (this.visible) {
+      const audioframe = (this.audiotrack.context.currentTime - this.starttime) * this.fps;
       this.frame = Math.round(audioframe + this.offsetframes); //1000ms / 24fps = 41.666666666
-      
+
       // Guard against NaN frame values
       if (isNaN(this.frame) || this.frame < 0) {
         return;
       }
-      
-      for(let i=0; i<this.stems.length; i++){
+
+      for (let i = 0; i < this.stems.length; i++) {
         this.stems[i].updateAnimation(this.frame);
       }
     }
@@ -227,29 +226,19 @@ export class Song {
   //////////////////////////////////////////////////////////////////////////////
   loadJSON(file, callback) {
     const xobj = new XMLHttpRequest();
-    xobj.overrideMimeType("application/json");
+    xobj.overrideMimeType('application/json');
     xobj.open('GET', file, true);
     xobj.onreadystatechange = () => {
-      if(xobj.readyState == 4 && xobj.status == "200") {callback(xobj.responseText);}
+      if (xobj.readyState === 4 && xobj.status === '200') {callback(xobj.responseText);}
     };
     xobj.send(null);
   }
 
 
-
-
   //var audioframe = Math.round((this.audiotrack.context.currentTime - this.audiotrack.startTime) * this.fps) - this.startframe + this.offsetframes; //1000ms / 24fps = 41.666666666
 
 
-
-
-
-
-
-
-
   /*
-
 
 
   //Load master json file
@@ -258,8 +247,6 @@ export class Song {
     mythis.stems = JSON.parse(data)[0].audiofiles;
   });
   */
-
-
 
 
   //
