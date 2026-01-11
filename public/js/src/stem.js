@@ -225,7 +225,7 @@ export class Stem {
         const thepitch = Math.log10(this.pitch[this.frame] / this.multiplyer * pitchmax * this.factor / this.fs) - 1.2;
         this.otherobject.position.y = thepitch;
       } else {
-        this.otherobject.position.y = 0; //Math.log10(pitchmin);
+        this.otherobject.position.y = 0; //Default when pitch < 30Hz
       }
     }
   }
