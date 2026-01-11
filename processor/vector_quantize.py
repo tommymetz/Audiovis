@@ -1,20 +1,20 @@
 import numpy as np
-from sklearn.cluster import KMeans
+from scipy.spatial.distance import cdist
 
 # ////////////////////////////////////////////////////////////
-# vector quantization using scikit-learn //////////////////////
+# vector quantization using numpy/scipy ////////////////////////
 # ////////////////////////////////////////////////////////////
 # Assign each sample to its nearest centroid
 
 
 def vector_quantize(sleepdelay, stftsamples_normalized, centroidcount, centroids):
     """
-    Assign each sample to its nearest centroid using KMeans prediction.
+    Assign each sample to its nearest centroid using Euclidean distance.
 
     Args:
-        sleepdelay: Legacy parameter (unused with scikit-learn, kept for API compatibility)
+        sleepdelay: Legacy parameter (unused, kept for API compatibility)
         stftsamples_normalized: Normalized STFT samples to quantize
-        centroidcount: Number of centroids
+        centroidcount: Number of centroids (unused but kept for API compatibility)
         centroids: List of centroid vectors from kmeans clustering
 
     Returns:
@@ -24,14 +24,12 @@ def vector_quantize(sleepdelay, stftsamples_normalized, centroidcount, centroids
     samples_array = np.array(stftsamples_normalized)
     centroids_array = np.array(centroids)
 
-    # Create a KMeans instance and set the pre-computed centroids
-    kmeans_model = KMeans(n_clusters=centroidcount, n_init=1, max_iter=1)
-    # Trick: fit on centroids themselves to initialize, then reassign cluster_centers_
-    kmeans_model.fit(centroids_array)
-    kmeans_model.cluster_centers_ = centroids_array
+    # Compute pairwise Euclidean distances between samples and centroids
+    # distances shape: (num_samples, num_centroids)
+    distances = cdist(samples_array, centroids_array, metric='euclidean')
 
-    # Predict cluster assignments for all samples
-    assignments = kmeans_model.predict(samples_array)
+    # Assign each sample to the nearest centroid (smallest distance)
+    assignments = np.argmin(distances, axis=1)
 
     print('vector_quantize complete:', len(samples_array), 'samples assigned')
 

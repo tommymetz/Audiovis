@@ -6,6 +6,10 @@ from sklearn.cluster import KMeans
 # ////////////////////////////////////////////////////////////
 # Clusters audio samples using K-means algorithm and returns centroids
 
+# Default number of iterations per update count for K-means convergence
+# This multiplier ensures adequate convergence while maintaining reasonable performance
+KMEANS_ITERATIONS_MULTIPLIER = 100
+
 
 def kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized, stftsamples_normalized2, nonquietsamples):
     """
@@ -51,7 +55,7 @@ def kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized, stf
         n_clusters=centroidcount,
         init='k-means++',
         n_init=1,  # Single initialization (original used 1 iteration)
-        max_iter=vqupdatecount * 100,  # Scale iterations based on vqupdatecount
+        max_iter=vqupdatecount * KMEANS_ITERATIONS_MULTIPLIER,
         random_state=42
     )
 
