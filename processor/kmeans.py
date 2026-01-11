@@ -11,14 +11,13 @@ from sklearn.cluster import KMeans
 KMEANS_ITERATIONS_MULTIPLIER = 100
 
 
-def kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized, stftsamples_normalized2, nonquietsamples):
+def kmeans(centroidcount, vqupdatecount, stftsamples_normalized, stftsamples_normalized2, nonquietsamples):
     """
     Perform K-means clustering on normalized STFT samples.
 
     Args:
-        sleepdelay: Legacy parameter (unused with scikit-learn, kept for API compatibility)
         centroidcount: Number of clusters (centroids) to create
-        vqupdatecount: Legacy parameter (unused with scikit-learn, kept for API compatibility)
+        vqupdatecount: Number of update iterations for K-means convergence
         stftsamples_normalized: Normalized STFT samples from left channel
         stftsamples_normalized2: Normalized STFT samples from right channel
         nonquietsamples: Indices of samples that are not quiet/silent
