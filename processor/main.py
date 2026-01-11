@@ -97,10 +97,8 @@ def analyze():
         # //////////////////////////////////////////////////////////////////////
         # ANALYSIS + KMEANS + VECTOR QUANTIZATION///////////////////////////////
         # //////////////////////////////////////////////////////////////////////
-        #2 cores, 4 threads
 
-        sleepdelay = 1.5 #0.8, 1.75
-        stftsamples_normalized, stftsamples_normalized2, harmonicsamples, harmonicchunks, volumes, balances, widths, nonquietsamples = analysis(filename, sleepdelay, fs, fps, x, x2)
+        stftsamples_normalized, stftsamples_normalized2, harmonicsamples, harmonicchunks, volumes, balances, widths, nonquietsamples = analysis(filename, fs, fps, x, x2)
 
         allquietsamples = False
         if len(nonquietsamples) > 0:
@@ -108,12 +106,10 @@ def analyze():
             #K-Means
             centroidcount = 24 #100
             vqupdatecount = 1 #2
-            sleepdelay = 0.04 #0.01
-            centroids = kmeans(sleepdelay, centroidcount, vqupdatecount, stftsamples_normalized, stftsamples_normalized2, nonquietsamples)
+            centroids = kmeans(centroidcount, vqupdatecount, stftsamples_normalized, stftsamples_normalized2, nonquietsamples)
 
             #Vector Quantization
-            sleepdelay = 0.06 #0.03
-            stftvqarray = vector_quantize(sleepdelay, stftsamples_normalized, centroidcount, centroids)
+            stftvqarray = vector_quantize(stftsamples_normalized, centroidcount, centroids)
 
         else:
             print('all quiet samples')

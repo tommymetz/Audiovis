@@ -7,12 +7,11 @@ from scipy.spatial.distance import cdist
 # Assign each sample to its nearest centroid
 
 
-def vector_quantize(sleepdelay, stftsamples_normalized, centroidcount, centroids):
+def vector_quantize(stftsamples_normalized, centroidcount, centroids):
     """
     Assign each sample to its nearest centroid using Euclidean distance.
 
     Args:
-        sleepdelay: Legacy parameter (unused, kept for API compatibility)
         stftsamples_normalized: Normalized STFT samples to quantize
         centroidcount: Number of centroids (unused but kept for API compatibility)
         centroids: List of centroid vectors from kmeans clustering
