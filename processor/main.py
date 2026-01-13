@@ -215,7 +215,10 @@ def _create_mp3(
         raise RuntimeError(f"lame encoding failed: {e}") from e
     
     # Clean up temporary edit file
-    os.remove(editfile)
+    try:
+        editfile.unlink()
+    except FileNotFoundError:
+        pass  # File may not exist if previous step failed
 
 
 def _process_stem(

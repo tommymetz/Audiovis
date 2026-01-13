@@ -170,7 +170,7 @@ def analysis(
             maximum2 = 1e-10
             
         gain: float = 1.0 / maximum
-        gain2: float = 1.0 / maximum
+        gain2: float = 1.0 / maximum2
         gains.append(gain)
         gains2.append(gain2)
         maximums.append(maximum)
