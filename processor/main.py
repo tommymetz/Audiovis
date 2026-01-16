@@ -1,407 +1,491 @@
-import os
+"""
+Main audio analysis pipeline for Audiovis visualization.
+
+This module is the entry point for the audio analysis pipeline that processes
+audio stems and generates visualization data. It performs the complete workflow:
+
+1. Discover audio files in the source directory
+2. Generate MP3 files from WAV masters for web playback
+3. Split stereo files into left/right channels for analysis
+4. Run spectral analysis (STFT, harmonics) via the analysis module
+5. Perform K-means clustering to find spectral "fingerprints"
+6. Vector quantize samples to their nearest centroids
+7. Export binary data files and JSON metadata for the frontend
+
+The output consists of:
+- MP3 audio file for web playback
+- JSON metadata files with track info and data structure
+- Binary data files with volume, balance, width, centroids, and pitch data
+
+Usage:
+    python main.py
+
+Configure source/destination paths and parameters in the analyze() function.
+"""
+from __future__ import annotations
+
 import json
+import os
+from pathlib import Path
+from subprocess import CalledProcessError, check_output
+from typing import Any
+
 import numpy as np
-from subprocess import check_output
+from numpy.typing import NDArray
 from smstools.models import utilFunctions as UF
 
 from analysis import analysis
-
 from kmeans import kmeans
-
 from vector_quantize import vector_quantize
 
-def analyze():
 
-    # get all files with .wav extention
-    thename = 'SlowlyForget'
-    # TheFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
-    TheFolder = '/Users/tometz/Documents/Clients/Audiovis/stems/' + thename + '/'
-    TheDestFolder = '/Users/tometz/Documents/Clients/Audiovis/public/content/' + thename + '/'
-    masterfile = thename + '.wav'
-    masterfilestring = masterfile
-    if masterfile.endswith('.wav'):
-        masterfilestring = masterfile[:-4]
-
-    startingpos = 0 #seconds 92, 95
-    writemp3 = True
-    audiofiles = []
-    files = [f for f in os.listdir(TheFolder) if os.path.isfile(TheFolder + f)]
-    count = 0
-    limit = 100
-    skipcount = 10
-    for i in files:
-        if i.endswith('.wav'):
-            if i != masterfile:
-                if count < limit:
-                    if i.startswith(masterfilestring): #if not i.endswith('.l.wav') and not i.endswith('.r.wav') and i.endswith('.wav'):
-                        audiofiles.append(i)
-                        count += 1
-
-    # save list of audio files to json file
-    data = []
-    data.append({
-        'mp3file': masterfile[:-4] + '.mp3',
-        'audiofiles':audiofiles
-    })
-    with open(TheDestFolder + '_analysis_files.json', 'w') as outfile:
-        json.dump(data, outfile)
-
-    audiofiles = audiofiles[skipcount:]
-    print(audiofiles)
-    #quit()
-
-    # create trimmed version of master file
-    editfile = TheFolder + masterfilestring + '_edit.wav'
-    soxcommand = ['sox', TheFolder + masterfile, editfile, 'trim', str(startingpos)]
-    if writemp3:
-        outleft = check_output(soxcommand)
-
-    # create mp3 - lame -b128 sample.wav sample.mp3, lame --abr 100 Details.wav Details.mp3
-    print('LAME')
-    mp3file = masterfile
-    if mp3file.endswith('.wav'):
-        mp3file = mp3file[:-4]
-    mp3file = TheDestFolder + mp3file + '.mp3'
-    lamecommand = ['lame', '--abr', '100', editfile, mp3file]
-    if writemp3:
-        outleft = check_output(lamecommand)
-
-    # delete edit file
-    os.remove(editfile)
+def analyze() -> None:
+    """
+    Main analysis function that processes audio files for visualization.
     
+    Processes all WAV audio stems in the source folder, performs spectral
+    analysis, clustering, and exports visualization data for the web frontend.
+    
+    The function:
+    1. Lists all WAV files matching the master filename pattern
+    2. Creates an MP3 version of the master file for web playback
+    3. For each stem file:
+       - Splits stereo to left/right channels
+       - Performs STFT and harmonic analysis
+       - Clusters spectral frames using K-means
+       - Vector quantizes frames to centroids
+       - Exports JSON metadata and binary data files
+    
+    Configuration (modify these values as needed):
+        thename: Song/project name (folder name)
+        TheFolder: Source folder containing WAV stems
+        TheDestFolder: Destination for analysis output
+        masterfile: Main audio file name
+        startingpos: Starting position in seconds (for trimming)
+        writemp3: Whether to generate MP3 file
+        limit: Maximum number of stems to process
+        skipcount: Number of stems to skip (for partial processing)
+    
+    Output files:
+        - _analysis_files.json: List of processed audio files
+        - {masterfile}.mp3: Compressed audio for web playback
+        - {stemfile}_analysis.json: Metadata and structure info
+        - {stemfile}_analysis.data: Binary visualization data
+    """
+    # Configuration
+    thename: str = 'SlowlyForget'
+    TheFolder: str = f'/Users/tometz/Documents/Clients/Audiovis/stems/{thename}/'
+    TheDestFolder: str = f'/Users/tometz/Documents/Clients/Audiovis/public/content/{thename}/'
+    masterfile: str = f'{thename}.wav'
+    
+    # Trim file name extension for pattern matching
+    masterfilestring: str = masterfile[:-4] if masterfile.endswith('.wav') else masterfile
+    
+    # Processing parameters
+    startingpos: int = 0  # Starting position in seconds (for trimming intro)
+    writemp3: bool = True  # Whether to generate MP3 file
+    fps: int = 24  # Target frames per second for visualization
+    
+    # File discovery
+    audiofiles: list[str] = _discover_audio_files(
+        TheFolder, masterfile, masterfilestring, limit=100
+    )
+    
+    # Save list of audio files to JSON
+    _save_file_list(TheDestFolder, masterfile, audiofiles)
+    
+    # Skip some files if needed (for partial/incremental processing)
+    skipcount: int = 10
+    audiofiles = audiofiles[skipcount:]
+    print(f"Processing {len(audiofiles)} audio files: {audiofiles}")
+    
+    # Create trimmed and compressed master file
+    if writemp3:
+        _create_mp3(TheFolder, TheDestFolder, masterfile, startingpos)
+    
+    # Process each audio stem
     for filename in audiofiles:
-
-        # seperate stereo files int left and right wav files
-        fileleft = '_Split_' + filename + '.l.wav'
-        fileright = '_Split_' + filename + '.r.wav'
-        soxleft = ['sox', TheFolder + filename, TheFolder + fileleft, 'remix', '1']
-        soxright = ['sox', TheFolder + filename, TheFolder + fileright, 'remix', '2']
-        outleft = check_output(soxleft)
-        outright = check_output(soxright)
-
-        # read the files
-        fs, x = UF.wavread(TheFolder + fileleft)
-        fs, x2 = UF.wavread(TheFolder + fileright)
-
-        # delete split files
-        os.remove(TheFolder + fileleft)
-        os.remove(TheFolder + fileright)
-
-        #remove until starting point
-        delta = startingpos * fs
-        x = x[delta:len(x)]
-        x2 = x2[delta:len(x2)]
-
-        fps = 24
-
-        # //////////////////////////////////////////////////////////////////////
-        # ANALYSIS + KMEANS + VECTOR QUANTIZATION///////////////////////////////
-        # //////////////////////////////////////////////////////////////////////
-
-        stftsamples_normalized, stftsamples_normalized2, harmonicsamples, harmonicchunks, volumes, balances, widths, nonquietsamples = analysis(filename, fs, fps, x, x2)
-
-        allquietsamples = False
-        if len(nonquietsamples) > 0:
-
-            #K-Means
-            centroidcount = 24 #100
-            vqupdatecount = 1 #2
-            centroids = kmeans(centroidcount, vqupdatecount, stftsamples_normalized, stftsamples_normalized2, nonquietsamples)
-
-            #Vector Quantization
-            stftvqarray = vector_quantize(stftsamples_normalized, centroidcount, centroids)
-
-        else:
-            print('all quiet samples')
-            allquietsamples = True
-            #sys.exit('all quiet samples')
-
-        # //////////////////////////////////////////////////////////////////////
-        # PREPARE FOR EXPORT////////////////////////////////////////////////////
-        # //////////////////////////////////////////////////////////////////////
-        if not allquietsamples:
-            maxvolume = max(volumes)
-            maxbalance = max(balances, key=abs)
-            maxwidth = max(widths)
-
-            # map logorithmic values to a scale between 0 and 255
-            multiplyer = 65535 #int16=65535, 8bit=255
-            for i in range(len(volumes)):
-                volumes[i] = int(round(float(volumes[i])/maxvolume * multiplyer))
-                balances[i] = int(round(balances[i] * (multiplyer/2)) + (multiplyer/2))
-                widths[i] = int(round(float(widths[i])/maxwidth * multiplyer))
-                #for j in range(len(stftsamples[0])):
-                    #stftsamples[i][j] = int(round(stftsamples[i][j] * 65536)) #65536, 2147483647
-
-            # map logorithmic values to a scale between 0 and 255
-            for i in range(centroidcount):
-                for j in range(len(centroids[0])):
-
-                    #scaled = math.log(centroids[i][j]) #math.log(centroids[i][j], 0.5) * centroids[i][j] * multiplyer * 2
-                    #print scaled, centroids[i][j]
-                    centroids[i][j] = int(round(centroids[i][j] * multiplyer))
-                    #centroids[i][j] = int(round(scaled))
-
-            # flatten clusters
-            flat_stft_clusters = [x for sublist in centroids for x in sublist]
-
-            #plt.plot(centroids[0])
-            #plt.yscale('log')
-            #plt.show()
-
-            # //////////////////////////////////////////////////////////////////////
-            # HM ///////////////////////////////////////////////////////////////////
-            # //////////////////////////////////////////////////////////////////////
-            nH = len(harmonicchunks[0][0][0])
-
-            # map values
-            minf0=30
-            maxf0=3000#2000
-            for i in range(len(harmonicsamples)):
-                for j in range(len(harmonicsamples[0][0])):
-                    value = float(harmonicsamples[i][0][j]) / maxf0
-                    harmonicsamples[i][0][j] = int(round(value * multiplyer)) #frequency
-                    #print 'value', value
-                    #harmonicsamples[i][1][j] = int(round(harmonicsamples[i][1][j] * multiplyer)) #magnetude
-
-            # make hfreq and hmag back to back in single array
-            harmonicsamplessinglearray = []
-            for i in range(len(harmonicsamples)):
-                harmonicsamplessinglearray.append(harmonicsamples[i][0][0])
-                #harmonicsamplessinglearray.extend(harmonicsamples[i][0]) #frequency
-                #harmonicsamplessinglearray.extend(harmonicsamples[i][1]) #magnetude
-
-            #print 'harmonicsamplessinglearray', harmonicsamplessinglearray
-            #plt.plot(harmonicsamplessinglearray)
-            #plt.show()
-
-            # make pitch array for now
-            #pitches = []
-            #for i in range(len(harmonicsamples)):
-            #    pitches.append(int(round(harmonicsamples[i][0][0])))
+        _process_stem(
+            filename, TheFolder, TheDestFolder, masterfilestring,
+            startingpos, fps
+        )
 
 
-        # ////////////////////////////////////
-        # EXPORT//////////////////////////////
-        # ////////////////////////////////////
-        # save structure and track info into json file
-        '''
-        volume                      LEN x 1
-        balance                     LEN x 1
-        width                       LEN x 1
-        centroids                   CENTROIDCOUNT x FFTSIZE
-        centroid_indexes            LEN x 1
-        pitch                       LEN x 2
-        '''
-        data = {}
-        if not allquietsamples:
-            length = len(stftsamples_normalized)
-            data['structure'] = {
-                0:{'volume':[length, 1]},
-                1:{'balance':[length, 1]},
-                2:{'width':[length, 1]},
-                3:{'centroids':[centroidcount, len(centroids[0])]},
-                4:{'centroid_indexes':[length, 1]},
-                5:{'pitch':[length, 1]},
-            }
-            data['track'] = {
-                'filename':filename,
-                'fs':fs,
-                'fps':fps,
-                'byte_num_range':multiplyer,
-                'stft_size': len(stftsamples_normalized[0]),
-                'maxvolume':maxvolume,
-                'allquietsamples':allquietsamples,
-                'pitchmin':minf0,
-                'pitchmax':maxf0
-            }
-        else:
-            data['track'] = {
-                'allquietsamples':allquietsamples
-            }
+def _discover_audio_files(
+    folder: str,
+    masterfile: str,
+    masterfilestring: str,
+    limit: int = 100
+) -> list[str]:
+    """
+    Discover WAV audio files matching the master file pattern.
+    
+    Args:
+        folder: Directory to search for audio files.
+        masterfile: Name of the master audio file (to exclude).
+        masterfilestring: Filename prefix to match stem files.
+        limit: Maximum number of files to return.
+    
+    Returns:
+        List of matching audio filenames (without path).
+    
+    Raises:
+        FileNotFoundError: If folder does not exist.
+    """
+    folder_path = Path(folder)
+    if not folder_path.exists():
+        raise FileNotFoundError(f"Audio folder not found: {folder}")
+    
+    audiofiles: list[str] = []
+    files = [f.name for f in folder_path.iterdir() if f.is_file()]
+    
+    for filename in files:
+        if filename.endswith('.wav') and filename != masterfile:
+            if filename.startswith(masterfilestring):
+                audiofiles.append(filename)
+                if len(audiofiles) >= limit:
+                    break
+    
+    return audiofiles
 
-        with open(TheDestFolder + filename+'_analysis.json', 'w') as outfile:
-            json.dump(data, outfile, sort_keys=True)
 
-        # compile data byte array and write to file
-        if not allquietsamples:
-            combined_lists = volumes + balances + widths + flat_stft_clusters + stftvqarray + harmonicsamplessinglearray
-            fileobj = open(TheDestFolder + filename + '_analysis.data', mode='wb')
+def _save_file_list(dest_folder: str, masterfile: str, audiofiles: list[str]) -> None:
+    """
+    Save list of audio files to JSON for the frontend.
+    
+    Args:
+        dest_folder: Destination directory for the JSON file.
+        masterfile: Name of the master audio file.
+        audiofiles: List of stem audio filenames.
+    """
+    mp3file = masterfile[:-4] + '.mp3' if masterfile.endswith('.wav') else masterfile
+    
+    data: list[dict[str, Any]] = [{
+        'mp3file': mp3file,
+        'audiofiles': audiofiles
+    }]
+    
+    output_path = Path(dest_folder) / '_analysis_files.json'
+    with open(output_path, 'w', encoding='utf-8') as outfile:
+        json.dump(data, outfile, indent=2)
+
+
+def _create_mp3(
+    source_folder: str,
+    dest_folder: str,
+    masterfile: str,
+    startingpos: int
+) -> None:
+    """
+    Create trimmed MP3 file from WAV master using sox and lame.
+    
+    Args:
+        source_folder: Directory containing source WAV file.
+        dest_folder: Directory for output MP3 file.
+        masterfile: Name of the master WAV file.
+        startingpos: Start position in seconds for trimming.
+    
+    Raises:
+        CalledProcessError: If sox or lame commands fail.
+        FileNotFoundError: If masterfile doesn't exist.
+    """
+    masterfilestring = masterfile[:-4] if masterfile.endswith('.wav') else masterfile
+    
+    source_path = Path(source_folder) / masterfile
+    if not source_path.exists():
+        raise FileNotFoundError(f"Master file not found: {source_path}")
+    
+    # Create trimmed version using sox
+    editfile = Path(source_folder) / f'{masterfilestring}_edit.wav'
+    soxcommand = ['sox', str(source_path), str(editfile), 'trim', str(startingpos)]
+    
+    try:
+        check_output(soxcommand)
+    except CalledProcessError as e:
+        raise RuntimeError(f"sox trim failed: {e}") from e
+    
+    # Create MP3 using lame
+    print('Creating MP3 with LAME...')
+    mp3file = Path(dest_folder) / f'{masterfilestring}.mp3'
+    lamecommand = ['lame', '--abr', '100', str(editfile), str(mp3file)]
+    
+    try:
+        check_output(lamecommand)
+    except CalledProcessError as e:
+        raise RuntimeError(f"lame encoding failed: {e}") from e
+    
+    # Clean up temporary edit file
+    try:
+        editfile.unlink()
+    except FileNotFoundError:
+        pass  # File may not exist if previous step failed
+
+
+def _process_stem(
+    filename: str,
+    source_folder: str,
+    dest_folder: str,
+    masterfilestring: str,
+    startingpos: int,
+    fps: int
+) -> None:
+    """
+    Process a single audio stem file and export visualization data.
+    
+    Args:
+        filename: Name of the stem audio file.
+        source_folder: Directory containing source WAV files.
+        dest_folder: Directory for output files.
+        masterfilestring: Master file base name (unused but kept for API).
+        startingpos: Start position in seconds for trimming.
+        fps: Target frames per second for visualization.
+    """
+    # Split stereo file into left and right channels using sox
+    fileleft = f'_Split_{filename}.l.wav'
+    fileright = f'_Split_{filename}.r.wav'
+    
+    source_path = Path(source_folder)
+    
+    soxleft = ['sox', str(source_path / filename), str(source_path / fileleft), 'remix', '1']
+    soxright = ['sox', str(source_path / filename), str(source_path / fileright), 'remix', '2']
+    
+    try:
+        check_output(soxleft)
+        check_output(soxright)
+    except CalledProcessError as e:
+        print(f"Warning: Failed to split {filename}: {e}")
+        return
+    
+    # Read the WAV files
+    try:
+        fs, x = UF.wavread(str(source_path / fileleft))
+        fs, x2 = UF.wavread(str(source_path / fileright))
+    except Exception as e:
+        print(f"Warning: Failed to read {filename}: {e}")
+        os.remove(source_path / fileleft)
+        os.remove(source_path / fileright)
+        return
+    
+    # Delete split files (no longer needed)
+    os.remove(source_path / fileleft)
+    os.remove(source_path / fileright)
+    
+    # Trim audio to remove intro portion
+    delta = startingpos * fs
+    x = x[delta:]
+    x2 = x2[delta:]
+    
+    # Perform analysis
+    result = _analyze_and_cluster(filename, fs, fps, x, x2)
+    
+    # Export results
+    _export_results(filename, dest_folder, fs, fps, result)
+
+
+def _analyze_and_cluster(
+    filename: str,
+    fs: int,
+    fps: int,
+    x: NDArray[np.float64],
+    x2: NDArray[np.float64]
+) -> dict[str, Any]:
+    """
+    Perform spectral analysis and K-means clustering on audio.
+    
+    Args:
+        filename: Name of the audio file (for logging).
+        fs: Sample rate in Hz.
+        fps: Target frames per second.
+        x: Left channel audio samples.
+        x2: Right channel audio samples.
+    
+    Returns:
+        Dictionary containing analysis results and clustering data.
+    """
+    # Run spectral analysis
+    (stftsamples_normalized, stftsamples_normalized2, harmonicsamples,
+     harmonicchunks, volumes, balances, widths, nonquietsamples) = analysis(
+        filename, fs, fps, x, x2
+    )
+    
+    result: dict[str, Any] = {
+        'stftsamples_normalized': stftsamples_normalized,
+        'stftsamples_normalized2': stftsamples_normalized2,
+        'harmonicsamples': harmonicsamples,
+        'harmonicchunks': harmonicchunks,
+        'volumes': volumes,
+        'balances': balances,
+        'widths': widths,
+        'nonquietsamples': nonquietsamples,
+        'allquietsamples': False,
+        'centroids': [],
+        'stftvqarray': []
+    }
+    
+    # Check if there are any non-quiet samples to cluster
+    if len(nonquietsamples) > 0:
+        # K-Means clustering
+        centroidcount: int = 24  # Number of spectral "fingerprints"
+        vqupdatecount: int = 1   # K-means iterations multiplier
+        
+        centroids = kmeans(
+            centroidcount, vqupdatecount,
+            stftsamples_normalized, stftsamples_normalized2, nonquietsamples
+        )
+        
+        # Vector Quantization - assign each sample to nearest centroid
+        stftvqarray = vector_quantize(stftsamples_normalized, centroidcount, centroids)
+        
+        result['centroids'] = centroids
+        result['stftvqarray'] = stftvqarray
+    else:
+        print(f'{filename}: all quiet samples, skipping clustering')
+        result['allquietsamples'] = True
+    
+    return result
+
+
+def _export_results(
+    filename: str,
+    dest_folder: str,
+    fs: int,
+    fps: int,
+    result: dict[str, Any]
+) -> None:
+    """
+    Export analysis results to JSON metadata and binary data files.
+    
+    Output format:
+        JSON file contains structure description and track metadata.
+        Binary file contains packed uint16 values in order:
+        - volume (len x 1)
+        - balance (len x 1)
+        - width (len x 1)
+        - centroids (centroidcount x fftsize)
+        - centroid_indexes (len x 1)
+        - pitch (len x 1)
+    
+    Args:
+        filename: Name of the source audio file.
+        dest_folder: Directory for output files.
+        fs: Sample rate in Hz.
+        fps: Target frames per second.
+        result: Analysis results dictionary from _analyze_and_cluster.
+    """
+    dest_path = Path(dest_folder)
+    allquietsamples = result['allquietsamples']
+    
+    # Prepare metadata
+    data: dict[str, Any] = {}
+    
+    if not allquietsamples:
+        stftsamples_normalized = result['stftsamples_normalized']
+        harmonicsamples = result['harmonicsamples']
+        harmonicchunks = result['harmonicchunks']
+        volumes = result['volumes']
+        balances = result['balances']
+        widths = result['widths']
+        centroids = result['centroids']
+        stftvqarray = result['stftvqarray']
+        
+        length = len(stftsamples_normalized)
+        centroidcount = len(centroids)
+        
+        # Scale values to 16-bit integer range
+        multiplier: int = 65535  # uint16 max
+        
+        # Find max values for normalization
+        maxvolume = max(volumes) if volumes else 1.0
+        maxbalance = max((abs(b) for b in balances), default=1.0)
+        maxwidth = max(widths) if widths else 1.0
+        
+        # Prevent division by zero
+        if maxvolume == 0:
+            maxvolume = 1.0
+        if maxwidth == 0:
+            maxwidth = 1.0
+        
+        # Scale volumes, balances, widths to uint16 range
+        scaled_volumes: list[int] = []
+        scaled_balances: list[int] = []
+        scaled_widths: list[int] = []
+        
+        for i in range(len(volumes)):
+            scaled_volumes.append(int(round(float(volumes[i]) / maxvolume * multiplier)))
+            scaled_balances.append(int(round(balances[i] * (multiplier / 2)) + (multiplier // 2)))
+            scaled_widths.append(int(round(float(widths[i]) / maxwidth * multiplier)))
+        
+        # Scale centroids to uint16 range
+        scaled_centroids: list[list[int]] = []
+        for i in range(centroidcount):
+            scaled_centroid: list[int] = []
+            for j in range(len(centroids[0])):
+                scaled_centroid.append(int(round(centroids[i][j] * multiplier)))
+            scaled_centroids.append(scaled_centroid)
+        
+        # Process harmonic data
+        nH = len(harmonicchunks[0][0][0]) if harmonicchunks else 0
+        minf0: int = 30
+        maxf0: int = 3000
+        
+        # Scale harmonic frequencies
+        scaled_harmonics: list[int] = []
+        for i in range(len(harmonicsamples)):
+            value = float(harmonicsamples[i][0][0]) / maxf0
+            scaled_harmonics.append(int(round(value * multiplier)))
+        
+        # Build structure description
+        data['structure'] = {
+            0: {'volume': [length, 1]},
+            1: {'balance': [length, 1]},
+            2: {'width': [length, 1]},
+            3: {'centroids': [centroidcount, len(centroids[0])]},
+            4: {'centroid_indexes': [length, 1]},
+            5: {'pitch': [length, 1]},
+        }
+        data['track'] = {
+            'filename': filename,
+            'fs': fs,
+            'fps': fps,
+            'byte_num_range': multiplier,
+            'stft_size': len(stftsamples_normalized[0]),
+            'maxvolume': maxvolume,
+            'allquietsamples': allquietsamples,
+            'pitchmin': minf0,
+            'pitchmax': maxf0
+        }
+    else:
+        data['track'] = {
+            'allquietsamples': allquietsamples
+        }
+    
+    # Write JSON metadata
+    json_path = dest_path / f'{filename}_analysis.json'
+    with open(json_path, 'w', encoding='utf-8') as outfile:
+        json.dump(data, outfile, sort_keys=True, indent=2)
+    
+    # Write binary data file
+    if not allquietsamples:
+        # Flatten centroids for binary output
+        flat_stft_clusters: list[int] = [x for sublist in scaled_centroids for x in sublist]
+        
+        # Combine all data in order
+        combined_lists = (
+            scaled_volumes +
+            scaled_balances +
+            scaled_widths +
+            flat_stft_clusters +
+            stftvqarray +
+            scaled_harmonics
+        )
+        
+        # Write as uint16 binary
+        data_path = dest_path / f'{filename}_analysis.data'
+        with open(data_path, mode='wb') as fileobj:
             off = np.array(combined_lists, dtype=np.uint16)
             off.tofile(fileobj)
-            fileobj.close()
 
 
-
-        # save flattened data to binary file
-        #flat = [x for sublist in stftsamples for x in sublist]
-        #fileobj = open(TheFolder + filename+'_analysis_stft', mode='wb')
-        #off = np.array(flat+flat_stft_clusters, dtype=np.int16) #float32
-        #off.tofile(fileobj)
-        #fileobj.close()
-
-        # save flattened data to binary file
-        #fileobj = open(TheFolder + filename+'_analysis_harmonic', mode='wb')
-        #off = np.array(harmonicsamplessinglearray, dtype=np.int16) #float32
-        #off.tofile(fileobj)
-        #fileobj.close()
-
-    return
-
-# run iterator
+# Run the analysis when executed directly
 if __name__ == '__main__':
     analyze()
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''centroidcount =48 #100
-vqupdatecount = 2 #2
-centroids = []
-
-#initialize centroids with nothing in them
-for i in range(centroidcount):
-    stft = [0] * len(stftsamples_normalized[0])
-    centroids.append(stft)
-
-allquietsamples = False
-if len(nonquietsamples) > 0:
-
-    #randomly initialize centroids - choose randomly from chunks
-    for i in range(centroidcount):
-        rand = randint(0, len(nonquietsamples)-1)
-        randlr = randint(0,1)
-        stft = []
-        for j in range(len(stftsamples_normalized[0])):
-            if randlr == 0:
-                stft.append(stftsamples_normalized[nonquietsamples[rand]][j])
-            else:
-                stft.append(stftsamples_normalized2[nonquietsamples[rand]][j])
-
-        #centroids.append(stft)
-        centroids[i] = stft
-
-        #plt.plot(centroids[i])
-        #plt.show()
-
-    # assign centroid 0 to noise bucket (muted)?
-
-    #make a downsized copy
-    stftsamples_normalized_downsized = stftsamples_normalized[0::4]
-
-    # repeat from here until converged - when centroids don't move much anymore
-    centroidassignments = [0] * len(stftsamples_normalized_downsized)
-    for i in range(vqupdatecount):
-
-        differencesum = 0
-
-        # //////////////////////////////////////////////////////////////
-        # ASSIGN SAMPLES////////////////////////////////////////////////
-        # //////////////////////////////////////////////////////////////
-        if __name__ == '__main__':
-            manager = Manager()
-            return_dict = manager.dict()
-            jobs = []
-
-            # process all chunks
-            for i in range(len(stftsamples_normalized_downsized)):
-                p = Process(target=worker_kmeans_assign, args=(i, centroidcount, stftsamples_normalized_downsized, centroids, return_dict))
-                jobs.append(p)
-                sleep(0.05) #0.1
-                p.start()
-
-            # join jobs
-            for proc in jobs:
-                proc.join()
-
-        centroidassignments = return_dict.values()
-        print('assign-samples')
-
-
-        #assign samples to a centroid
-        for j in range(len(stftsamples_normalized_downsized)):
-
-            #get distances from this sample point to all centroids
-            distances = []
-            for k in range(centroidcount):
-                distance = 0
-                for l in range(len(stftsamples_normalized_downsized[0])):
-                    dist = math.log10(stftsamples_normalized_downsized[j][l]) - math.log10(centroids[k][l])
-                    distance += pow(abs(dist), 2)
-                distances.append(distance)
-
-            #find closest centroid to this sample point and assign it
-            centroidindex = distances.index(min(distances))
-            centroidassignments[j] = centroidindex
-            #print 'distances', i, distances[centroidassignments[j]]
-            print(filename, 'kmeans assign', j, '/', len(stftsamples_normalized_downsized))
-
-
-
-        if __name__ == '__main__':
-            manager = Manager()
-            return_dict = manager.dict()
-            jobs = []
-
-            # process all chunks
-            for i in range(len(stftsamples_normalized_downsized)):
-                p = Process(target=worker_kmeans, args=('update-centroids', i, centroidcount, stftsamples_normalized_downsized, centroids, centroidassignments, differencesum, return_dict))
-                jobs.append(p)
-                sleep(0.05) #2.25
-                p.start()
-
-            # join jobs
-            for proc in jobs:
-                proc.join()
-
-        centroids = return_dict.values()
-
-        for j in range(centroidcount):
-
-            #find samples that are assigned to this centroid and sum values
-            sums = [0] * len(stftsamples_normalized_downsized[0])
-            assignmentcount = 0
-            for k in range(len(stftsamples_normalized_downsized)):
-                if centroidassignments[k] == j:
-                    for l in range(len(stftsamples_normalized_downsized[0])):
-                        sums[l] += stftsamples_normalized_downsized[k][l]
-                    assignmentcount += 1
-
-            #find the mean of the assigned samples
-            newcentroid = [0] * len(stftsamples_normalized_downsized[0])
-            for k in range(len(stftsamples_normalized_downsized[0])):
-                if assignmentcount != 0:
-                    newcentroid[k] = sums[k] / float(assignmentcount)
-
-            #calculate the difference between old centroid and new one
-            difference = 0
-            for k in range(len(stftsamples_normalized_downsized[0])):
-                difference += newcentroid[k] - centroids[j][k]
-            differencesum += difference
-
-            #assign centroid to the mean
-            for k in range(len(stftsamples_normalized_downsized[0])):
-                if assignmentcount != 0:
-                    centroids[j][k] = newcentroid[k]
-
-            print(filename, 'kmeans update', j, '/', centroidcount)'''
-
-        #print 'diffsum', i, differencesum
-
-        #plt.figure(figsize=(18, 10)) # create figure to plot
-        #plt.yscale('log', nonposy='clip')
-        #plt.xscale('log', nonposx='clip')
-        #for j in range(centroidcount):
-        #    plt.plot(centroids[j])
-        #plt.show()
-
-# end
