@@ -73,7 +73,7 @@ def analyze() -> None:
         - {stemfile}_analysis.data: Binary visualization data
     """
     # Configuration
-    thename: str = 'SlowlyForget'
+    thename: str = 'Details'
     TheFolder: str = f'/Users/tometz/Documents/Clients/Audiovis/stems/{thename}/'
     TheDestFolder: str = f'/Users/tometz/Documents/Clients/Audiovis/public/content/{thename}/'
     masterfile: str = f'{thename}.wav'
@@ -95,8 +95,10 @@ def analyze() -> None:
     _save_file_list(TheDestFolder, masterfile, audiofiles)
     
     # Skip some files if needed (for partial/incremental processing)
-    skipcount: int = 10
-    audiofiles = audiofiles[skipcount:]
+    # Set skipcount > 0 to resume processing after a certain number of already-processed files
+    skipcount: int = 0
+    if skipcount > 0:
+        audiofiles = audiofiles[skipcount:]
     print(f"Processing {len(audiofiles)} audio files: {audiofiles}")
     
     # Create trimmed and compressed master file
@@ -104,7 +106,9 @@ def analyze() -> None:
         _create_mp3(TheFolder, TheDestFolder, masterfile, startingpos)
     
     # Process each audio stem
-    for filename in audiofiles:
+    total_tracks = len(audiofiles)
+    for i, filename in enumerate(audiofiles, start=1):
+        print(f"\n[{i}/{total_tracks}] Processing: {filename}")
         _process_stem(
             filename, TheFolder, TheDestFolder, masterfilestring,
             startingpos, fps
@@ -137,7 +141,9 @@ def _discover_audio_files(
         raise FileNotFoundError(f"Audio folder not found: {folder}")
     
     audiofiles: list[str] = []
-    files = [f.name for f in folder_path.iterdir() if f.is_file()]
+    # Sort files alphabetically for deterministic, reproducible ordering
+    # This ensures _config.json order indices remain valid across runs
+    files = sorted([f.name for f in folder_path.iterdir() if f.is_file()])
     
     for filename in files:
         if filename.endswith('.wav') and filename != masterfile:
@@ -145,7 +151,7 @@ def _discover_audio_files(
                 audiofiles.append(filename)
                 if len(audiofiles) >= limit:
                     break
-    
+
     return audiofiles
 
 
